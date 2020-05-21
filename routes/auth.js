@@ -4,7 +4,7 @@ const {
   validateSignupData,
 } = require("../helpers/authValidator");
 const { userExists } = require("../helpers/userExists");
-const { registerUser, loginUser } = require("../services/auth");
+const { registerUser, loginUser, fetchUsers } = require("../services/auth");
 
 const router = express.Router();
 
@@ -31,4 +31,13 @@ router.post("/login", validateLoginData, async (req, res) => {
   }
 });
 
+router.get("/users", async (req, res) => {
+  try {
+    const { body } = req;
+    const result = await fetchUsers();
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
 module.exports = router;

@@ -1,4 +1,4 @@
-// Create a reusable helper function to check the user input
+// Create a helper function to check the user input
 const isEmpty = (string) => {
   if (string.trim() === "") return true;
   return false;
@@ -12,7 +12,7 @@ const isEmail = (email) => {
 };
 
 exports.validateSignupData = async (req, res, next) => {
-  let { fullname, email, password } = req.body;
+  let { username, email, password } = req.body;
   let errors = {};
 
   if (isEmpty(email)) {
@@ -25,7 +25,7 @@ exports.validateSignupData = async (req, res, next) => {
     errors.password = "Must not be empty";
   }
 
-  if (isEmpty(fullname)) {
+  if (isEmpty(username)) {
     errors.username = "Must not be empty";
   }
 
@@ -35,7 +35,7 @@ exports.validateSignupData = async (req, res, next) => {
       valid: Object.keys(errors).length === 0 ? true : false,
     });
 
-  req.body = { fullname, email, password };
+  req.body = { username, email, password };
   next();
 };
 
