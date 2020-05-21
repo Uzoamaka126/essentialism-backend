@@ -1,7 +1,7 @@
 const valuesData = require("../models/values");
 
 async function getValues() {
-  const allValues = await valuesData.getValues();
+  const allValues = await valuesData.findValues();
 
   if (!allValues) {
     return {
@@ -21,7 +21,7 @@ async function getValues() {
 }
 
 async function getSingleValue(id) {
-  const value = await valuesData.getValueById(id);
+  const value = await valuesData.findValueById(id);
 
   if (!value) {
     return {

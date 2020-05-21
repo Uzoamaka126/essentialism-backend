@@ -9,11 +9,14 @@ module.exports = {
 };
 
 function findValues() {
-  return db("values").select("id", "value_name");
+  return db("values").select("id", "value_name", "description");
 }
 
 function findValueById(id) {
-  return db("values").select("id", "value_name").where({ id }).first();
+  return db("values")
+    .select("id", "value_name", "description")
+    .where({ id })
+    .first();
 }
 
 function findUserById(id) {

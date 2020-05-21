@@ -1,9 +1,9 @@
 const express = require("express");
 const service = require("../services/values");
-
+const { validate } = require('../helpers/protectedMiddleware')
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
+router.get("/", validate, async (req, res, next) => {
   try {
     const values = await service.getValues();
     res.status(values.statusCode).json(values.data);
@@ -12,7 +12,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/:id", validate, async (req, res, next) => {
   const { id } = req.params;
   try {
     const value = await service.getSingleValue(id);
