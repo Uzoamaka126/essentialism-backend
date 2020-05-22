@@ -40,25 +40,7 @@ async function getSingleValue(id) {
   }
 }
 
-async function addUserValuesById(values) {
-  const newValues = await valuesData.addUserValues(values);
-  return newValues;
-}
-
-async function getValuesByUserId(id) {
-  const values = await valuesData.findValuesByUserId(id);
-  return values;
-}
-
-async function removeUserValues(userId, values) {
-  const response = await valuesData.deleteUserValues(userId, values);
-  return response;
-}
-
 module.exports = {
   getValues,
   getSingleValue,
-  addUserValuesById,
-  removeUserValues,
-  getValuesByUserId,
 };

@@ -1,26 +1,51 @@
 const express = require("express");
-const service = require("../services/values");
+const {
+  fetchUsers,
+  fetchSingleUser,
+  fetchUserValues,
+  addSingleUserValues,
+} = require("../services/users");
 const { authenticate } = require("../helpers/isLoggedIn");
 const router = express.Router();
 
-router.post("/:id/values", authenticate, async (req, res, next) => {
-  const values = req.body;
+router.get("/", async (req, res) => {
+  try {
+    const { body } = req;
+    const result = await fetchUsers();
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const result = await fetchSingleUser(id);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.post("/userValues", authenticate, async (req, res, next) => {
+  const { values } = req.body;
   try {
     const userId = req.user.subject;
     values.map((value) => {
-      service.addUserValuesById({ name: value, userId });
+      addSingleUserValues({ name: value, userId });
     });
-    return res.status(201).json({ message: "Added successfully" });
+    return res.status(201).json({ message: "Successful" });
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
 
-router.get("/:id/values", async (req, res, next) => {
-  const { id } = req.params;
+router.get("/userValues", authenticate, async (req, res, next) => {
   try {
-    const response = await service.getValuesByUserId(id);
+    const userId = req.user.subject;
+    const response = await fetchUserValues(userId);
     res.status(200).json({ message: "Success", response });
     return response;
   } catch (error) {

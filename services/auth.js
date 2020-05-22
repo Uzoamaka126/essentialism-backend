@@ -44,21 +44,3 @@ exports.loginUser = async (userData) => {
     console.log(error);
   }
 };
-
-exports.fetchUsers = async () => {
-  const allUsers = await get();
-
-  if (!allUsers) {
-    return {
-      statusCode: 404,
-      data: {
-        message: "Values not found",
-      },
-    };
-  } else {
-    return {
-      statusCode: 200,
-      data: allUsers
-    };
-  }
-}

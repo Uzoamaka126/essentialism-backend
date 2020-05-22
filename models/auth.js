@@ -1,7 +1,6 @@
 const db = require("../db-config");
 
 module.exports = {
-  get,
   getById,
   getBy,
   addNewUser,
@@ -16,10 +15,6 @@ async function addNewUser(user) {
   } catch (err) {
     console.log(err);
   }
-}
-
-function get() {
-  return db("users").select("id", "username", "email");
 }
 
 function getById(id) {

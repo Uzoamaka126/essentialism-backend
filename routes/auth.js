@@ -31,13 +31,4 @@ router.post("/login", validateLoginData, async (req, res) => {
   }
 });
 
-router.get("/users", async (req, res) => {
-  try {
-    const { body } = req;
-    const result = await fetchUsers();
-    res.status(200).json(result);
-  } catch (error) {
-    console.log(error);
-  }
-});
 module.exports = router;
