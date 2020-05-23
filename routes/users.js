@@ -30,7 +30,7 @@ router.patch("/:id/edit", authenticate, async (req, res) => {
   }
 });
 
-router.get("/values", async (req, res, next) => {
+router.get("/values/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await fetchUserValues(id);
@@ -41,7 +41,7 @@ router.get("/values", async (req, res, next) => {
   }
 });
 
-router.post("/values/:id", authenticate, async (req, res, next) => {
+router.post("/values", authenticate, async (req, res, next) => {
   const { values } = req.body;
   try {
     const userId = req.user.subject;
