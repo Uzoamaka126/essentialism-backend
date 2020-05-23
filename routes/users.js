@@ -19,7 +19,7 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-router.patch("/:id/edit", authenticate, async (req, res) => {
+router.patch("/edit/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const { body } = req;
