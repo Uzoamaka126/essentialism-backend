@@ -6,35 +6,23 @@ module.exports = {
   addUserValues,
   deleteUserValues,
   findUserById,
+  editUser,
 };
 
-function get() {
-  return db("users").select("id", "username", "email");
-}
-
-function findUserById(id) {
-  return db("users").select("id", "username", "email").where({ id }).first();
-}
-
-async function findValuesByUserId(userId) {
-  // return db("users_and_values as uv")
-  //   .join("users as u", "u.id", "uv.userId")
-  //   .select( "u.id", "uv.name", "u.username")
-  //   .where({ "u.id": userId });
+async function get() {
   try {
-    const values = await db("users_and_values")
-      .select("name")
-      .where({ userId });
+    const values = await db("users").select("id", "username", "email", "password");
     return values;
   } catch (error) {
     console.log(error);
   }
 }
 
-async function findUsersByValues(id) {
+async function findUserById(id) {
   try {
-    const response = await db("users_and_values")
-      .where({ id: id })
+    const response = await db("users")
+      .select("id", "username", "email")
+      .where({ id })
       .first();
     return response;
   } catch (error) {
@@ -42,17 +30,39 @@ async function findUsersByValues(id) {
   }
 }
 
-async function addUserValues(values) {
-  // return db("users_and_values as uv")
-  //   .insert(values, "id")
-  //   .join("users as u", "u.id", "uv.userId")
-  //   .select("u.id", "uv.userId", "uv.username")
-  //   .where({ "u.id": userId })
-  //   .then((ids) => {
-  //     return findUserById(ids[0]);
-  //   });
+async function editUser(userData, id) {
   try {
-    const [id] = await db("users_and_values").insert(values, "id");
+    const user = await db("users").where({ id: id }).update(userData);
+    return user;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
+}
+
+async function findValuesByUserId(userId) {
+  try {
+    const response = await db("users_plus_values")
+      .select("name")
+      .where({ userId });
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function findUsersByValues(id) {
+  try {
+    const response = await db("users_plus_values").where({ id: id }).first();
+    return response;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function addUserValues(values) {
+  try {
+    const [id] = await db("users_plus_values").insert(values, "id");
     const response = await findUsersByValues(id);
     return response;
   } catch (error) {
@@ -61,7 +71,7 @@ async function addUserValues(values) {
 }
 
 function deleteUserValues(userId, values) {
-  return db("users_and_values as uv")
+  return db("users_plus_values as uv")
     .whereIn("name", values)
     .andWhere({ id: userId })
     .del();

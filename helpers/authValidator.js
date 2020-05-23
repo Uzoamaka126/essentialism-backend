@@ -1,6 +1,6 @@
 // Create a helper function to check the user input
 const isEmpty = (string) => {
-  if (string.trim() === "") return true;
+  if (string && string.trim() === "") return true;
   return false;
 };
 

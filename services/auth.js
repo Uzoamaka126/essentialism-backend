@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const { verifyUser, getBy, addNewUser, get } = require("../models/auth");
+const { verifyUser, getBy, addNewUser, editUser } = require("../models/auth");
 const {
   generateToken,
   generateVerificationToken,
@@ -44,3 +44,5 @@ exports.loginUser = async (userData) => {
     console.log(error);
   }
 };
+
+

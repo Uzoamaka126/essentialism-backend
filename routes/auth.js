@@ -4,7 +4,7 @@ const {
   validateSignupData,
 } = require("../helpers/authValidator");
 const { userExists } = require("../helpers/userExists");
-const { registerUser, loginUser, fetchUsers } = require("../services/auth");
+const { registerUser, loginUser } = require("../services/auth");
 
 const router = express.Router();
 
