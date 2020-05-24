@@ -26,33 +26,28 @@ exports.fetchAllUserProjects = async (id) => {
 
 exports.fetchSingleProject = async (userId, projectId) => {
   const response = await projectData.findUsersByProjects(userId, projectId);
-    if (!response) {
-        return {
-            status: 404,
-            message: "Project could not be fetched",
-            data: {
-                project: response,
-            },
-        };
-    } else {
-        return {
-            status: 200,
-            type: "success",
-            message: "Successful",
-            data: {
-                project: response
-            },
-        };
-    }
+  if (!response) {
+    return {
+      status: 404,
+      message: "Project could not be fetched",
+      data: {
+        project: response,
+      },
+    };
+  } else {
+    return {
+      status: 200,
+      type: "success",
+      message: "Successful",
+      data: {
+        project: response,
+      },
+    };
+  }
 };
 
-exports.updateProjectName = async (name, userId, valueId, projectId) => {
-  const response = await projectData.editUserProject(
-    name,
-    userId,
-    valueId,
-    projectId
-  );
+exports.updateProjectName = async (projectObj) => {
+  const response = await projectData.editUserProject(projectObj);
   if (!response) {
     return {
       status: 404,
@@ -73,54 +68,41 @@ exports.updateProjectName = async (name, userId, valueId, projectId) => {
       type: "success",
       message: "Successful",
       data: {
-        project: {
-          ...project,
-          id: userId,
-          project_name: response.project_name,
-          project_id: projectId,
-          value_id: valueId,
-        },
+        project: response,
       },
     };
   }
 };
 
-exports.createUserProject = async (project, userId, valueId) => {
-  const response = await projectData.addUserProjects(
-    project,
-    userId,
-    valueId
-  );
-    if (!response) {
-        return {
-            status: 404,
-            message: "Project could not be created",
-            data: {
-                project: {
-                    ...project,
-                    id: userId,
-                    project_name: response.project_name,
-                    user_id: userId,
-                    value_id: valueId,
-                }
-            }
-        };
-    } else {
-        return {
-            status: 200,
-            type: "success",
-            message: "Successful",
-            data: {
-                project: {
-                    ...project,
-                    id: userId,
-                    project_name: response.project_name,
-                    user_id: userId,
-                    value_id: valueId,
-                }
-            },
-        };
-    }
+exports.createUserProject = async (project) => {
+  const response = await projectData.addUserProjects(project);
+  if (!response) {
+    return {
+      status: 404,
+      message: "Project could not be created",
+      data: {
+        project: {
+          project_name: project.project_name,
+          user_id: project.user_id,
+          value_id: project.value_id,
+        },
+      },
+    };
+  } else {
+    return {
+      status: 200,
+      type: "success",
+      message: "Successful",
+      data: {
+        project: {
+          ...project,
+          user_id: project.user_id,
+          project_name: project.project_name,
+          value_id: project.value_id,
+        },
+      },
+    };
+  }
 };
 
 exports.removeUserProjects = async (userId, project) => {

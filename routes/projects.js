@@ -4,15 +4,17 @@ const service = require("../services/projects");
 
 const { authenticate } = require("../helpers/isLoggedIn");
 
+// {
+//     project_name: body.project_name,
+//         user_id: user_id,
+//             value_id: value_id,
+//     }
+
 router.post("/create", authenticate, async (req, res) => {
   try {
     const { body } = req;
-    const { value_id, user_id } = body;
-    const response = await service.createUserProject({
-      project_name: body.project_name,
-      user_id: user_id,
-      value_id: value_id,
-    });
+    // const { value_id, user_id } = body;
+    const response = await service.createUserProject(body);
     if (response) {
       res.status(200).json(response);
     } else {
@@ -25,17 +27,12 @@ router.post("/create", authenticate, async (req, res) => {
 
 router.put("/update", authenticate, async (req, res) => {
   try {
-    const { user_id, value_id, project_id, project_name } = req.body;
-    const response = await service.updateProjectName(
-      project_name,
-      user_id,
-      value_id,
-      project_id
-    );
+      const { body } = req;
+    const response = await service.updateProjectName(body);
     if (response) {
-      res.status(200).json(response);
+      return res.status(200).json(response);
     } else {
-      res.status(304).json(response);
+      res.status(404).json(response);
     }
   } catch (err) {
     console.log(err);
