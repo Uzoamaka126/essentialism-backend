@@ -50,7 +50,7 @@ router.post("/values", authenticate, async (req, res, next) => {
     });
     return res.status(201).json({ message: "Successful", values });
   } catch (error) {
-    console.log(error);
+    console.log(error); 
     next(error);
   }
 });
