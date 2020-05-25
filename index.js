@@ -1,4 +1,6 @@
-require('dotenv').config();
+if (process.env.NODE_ENV !== 'production') { require('dotenv').config() }
+
+// require('dotenv').config();
 const server = require('./app');
 const config = require('./Config')
 
