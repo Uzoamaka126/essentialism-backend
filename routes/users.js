@@ -55,7 +55,7 @@ router.post("/values", authenticate, async (req, res, next) => {
   }
 });
 
-router.get("/user/:id", async (req, res) => {
+router.get("/fetch/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const result = await fetchSingleUser(id);
