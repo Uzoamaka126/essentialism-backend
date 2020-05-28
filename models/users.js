@@ -32,7 +32,10 @@ async function findUserById(id) {
 
 async function editUser(userData, id) {
   try {
-    const user = await db("users").where({ id: id }).update(userData);
+    const user = await db("users")
+      .select("id", "username", "email")
+      .where({ id: id })
+      .update(userData);
     return user;
   } catch (err) {
     console.log(err);
