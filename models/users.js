@@ -11,7 +11,7 @@ module.exports = {
 
 async function get() {
   try {
-    const values = await db("users").select("id", "username", "email", "password");
+    const values = await db("users").select("id", "username", "email");
     return values;
   } catch (error) {
     console.log(error);
