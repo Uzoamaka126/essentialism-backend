@@ -7,6 +7,9 @@ exports.fetchUsers = async () => {
 
 exports.fetchSingleUser = async (id) => {
   const user = await usersData.findUserById(id);
+  if (!user) {
+    return { statusCode: 404, data: { message: "User does not exist" } };
+  }
   return user;
 };
 
