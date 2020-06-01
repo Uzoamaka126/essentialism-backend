@@ -31,7 +31,10 @@ exports.loginUser = async (userData) => {
     // if the password from the user input matches the one in the db
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = generateToken(user);
+      const { id, username } = user;
       return {
+        id,
+        username,
         email,
         token,
       };
