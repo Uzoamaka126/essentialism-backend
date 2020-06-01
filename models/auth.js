@@ -19,14 +19,14 @@ async function addNewUser(user) {
 
 function getById(id) {
   return db("users")
-    .select("id", "username", "email", "isVerified")
+    .select("id", "username", "email")
     .where({ id: id })
     .first();
 }
 
 function getBy(filter) {
   return db("users")
-    .select("id", "username", "isVerified", "email")
+    .select("id", "username", "email", "password")
     .where(filter)
     .first();
 }

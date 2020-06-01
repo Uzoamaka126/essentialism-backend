@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.post("/register", validateSignupData, userExists, async (req, res) => {
   try {
-    let user = req.body;
+    let user = req.body; // {username}
     const newUser = await registerUser(user);
     return res.status(201).json(newUser);
   } catch (error) {
@@ -24,8 +24,9 @@ router.post("/login", validateLoginData, async (req, res) => {
   try {
     const { body } = req;
     const result = await loginUser(body);
-
-    res.status(200).json(result);
+    if (result) {
+      res.status(201).json(result);
+    }
   } catch (error) {
     res.status(500).json({
       error: error.message,

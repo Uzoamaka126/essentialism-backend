@@ -5,14 +5,12 @@ function validate(req, res, next) {
   const token = req.headers["authorization"] || "trapped";
 
   if (token) {
-    jwt.verify(token, JWT_SECRET, (err, decoded) => {
+    jwt.verify(token, JWT_SECRET, (err, user) => {
       if (err)
         return res.status(401).json({
           message: "User not authenticated",
         });
-
-      req.user = decoded;
-
+      req.user = user;
       next();
     });
   } else {

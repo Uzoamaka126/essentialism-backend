@@ -13,9 +13,7 @@ async function getValues() {
   } else {
     return {
       statusCode: 200,
-      data: {
-        data: allValues,
-      },
+      data: allValues,
     };
   }
 }
@@ -33,9 +31,7 @@ async function getSingleValue(id) {
   } else {
     return {
       statusCode: 200,
-      data: {
-        data: value,
-      },
+      data: value
     };
   }
 }

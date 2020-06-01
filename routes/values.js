@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/", validate, async (req, res, next) => {
   try {
     const values = await service.getValues();
-    res.status(values.statusCode).json(values.data);
+    res.status(200).json(values.data);
   } catch (error) {
     next(error);
   }

@@ -13,13 +13,11 @@ exports.registerUser = async (user) => {
     user.jwt = generateVerificationToken(15, "12345abcde");
 
     const response = await addNewUser(user);
-    console.log(response);
     const token = generateToken(response);
-
     return {
       response,
       token,
-    };
+    }; // returns { {id, username, email}, token}
   } catch (error) {
     return error.message;
   }
@@ -27,9 +25,8 @@ exports.registerUser = async (user) => {
 
 exports.loginUser = async (userData) => {
   const { email, password } = userData;
-
   try {
-    // Get the email in the database
+    // Get the email from the database
     const user = await getBy({ email });
     // if the password from the user input matches the one in the db
     if (user && bcrypt.compareSync(password, user.password)) {
@@ -39,9 +36,10 @@ exports.loginUser = async (userData) => {
         token,
       };
     }
-    return null;
+    return { message: "User email or password is incorrect!"};
   } catch (error) {
     console.log(error);
+    return error;
   }
 };
 
