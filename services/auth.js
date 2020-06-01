@@ -17,7 +17,7 @@ exports.registerUser = async (user) => {
     return {
       response,
       token,
-    }; // returns { {id, username, email}, token}
+    };
   } catch (error) {
     return error.message;
   }
