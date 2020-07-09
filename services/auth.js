@@ -4,14 +4,15 @@ const {
   generateToken,
   generateVerificationToken,
 } = require("../helpers/tokenGenerator");
+const variables = require("../helpers/variables");
 
 exports.registerUser = async (user) => {
   try {
     const { password } = user;
+
     const hash = bcrypt.hashSync(password, 10);
     user.password = hash;
     user.jwt = generateVerificationToken(15, "12345abcde");
-
     const response = await addNewUser(user);
     const token = generateToken(response);
     return {

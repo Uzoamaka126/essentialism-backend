@@ -17,8 +17,6 @@ exports.validateSignupData = async (req, res, next) => {
 
   if (isEmpty(email)) {
     errors.email = "Must not be empty";
-  } else if (!isEmail(email)) {
-    errors.email = "Must be a valid email address";
   }
 
   if (isEmpty(password)) {

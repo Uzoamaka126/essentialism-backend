@@ -3,7 +3,10 @@ const db = require("../db-config");
 exports.userExists = async (req, res, next) => {
   let { email } = req.body;
 
-  const user = await db("users").where({ email: email }).first();
+  const user = await db("users")
+    .select("email")
+    .where({ email: email })
+    .first();
 
   if (user)
     return res.status(400).json({

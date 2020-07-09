@@ -14,4 +14,8 @@ module.exports = {
   badToken: "Bad Token!",
   missingToken: "Add your token to access this resource",
   updatedProject: "Project has been updated successfully",
+  misisngEmail: "Please provide a verified email",
+  missingPassword: "Please provide a password",
+  wrongPassword: "Passwords do not match",
+  missingUsername: "Please provide a username"
 };

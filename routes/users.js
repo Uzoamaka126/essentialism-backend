@@ -23,8 +23,14 @@ router.patch("/edit/:id", authenticate, async (req, res) => {
   try {
     const { id } = req.params;
     const { body } = req;
-    const response = await editUserInfo(body, id);
-    res.status(200).json(response);
+    if(!id) {
+      return res.status(404).send("An id is required")
+    }
+      const response = await editUserInfo(body, id);
+      if (response) {
+        res.status(200).json(response);
+      } else {
+      }
   } catch (err) {
     console.log(err);
   }
