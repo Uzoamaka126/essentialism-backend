@@ -12,13 +12,13 @@ module.exports = {
   addUserTasksToProjects,
 };
 
-async function addUserProjects(name, user_id, value_id) {
+async function addUserProjects(project) {
   try {
     const ids = await db("users_values_plus_projects as uvpp")
-      .insert(name, "id")
+      .insert(project, "id")
       .join("users as u", "u.id", "uvpp.user_id")
       .join("values as v", "v.id", "uvpp.value_id")
-      .where({ "u.id": user_id, "v.value_id": value_id });
+      .where({ "u.id": project.user_id, "v.id": project.value_id });
     const id = ids[0];
     const response = await findUsersByProjects(id);
     return response;
@@ -73,14 +73,10 @@ async function editUserProject(project) {
   }
 }
 
-async function findUsersByProjects(user_id, value_id) {
+async function findUsersByProjects(id) {
   try {
-    const response = await db("users_values_plus_projects as uvp")
-      .join("users as u", "u.id", "uvp.user_id")
-      .join("values as v", "v.id", "uvpp.value_id")
-      .select("u.id", "v.id", "v.value_name", "project_name", "id")
-      .where({ "u.id": user_id })
-      .andWhere({ "v.id": value_id })
+    const response = await db("users_values_plus_projects")
+      .where({ id: id })
       .first();
     return response;
   } catch (error) {

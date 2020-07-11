@@ -1,20 +1,6 @@
 const projectData = require("../models/projects");
 
 exports.fetchAllUserProjects = async (userId, valueId) => {
-  if (!userId) {
-    return {
-      status: 404,
-      message: "No user id present",
-    };
-  };
-
-  if (!valueId) {
-    return {
-      status: 404,
-      message: "No value id present",
-    };
-  };
-
   const response = await projectData.getUserProjects(userId, valueId);
   if (!response) {
     return {
@@ -40,21 +26,15 @@ exports.fetchSingleProject = async (projectId) => {
   if (!response) {
     return {
       status: 404,
-      message: "Project could not be fetched",
-      data: {
-        project: response,
-      },
+      message: "This roject does not exist",
     };
-  } else {
+  }
     return {
       status: 200,
       type: "success",
       message: "Successful",
-      data: {
-        project: response,
-      },
+      data: response
     };
-  }
 };
 
 exports.updateProjectName = async (projectObj) => {
@@ -91,28 +71,13 @@ exports.createUserProject = async (project) => {
     return {
       status: 404,
       message: "Project could not be created",
-      data: {
-        project: {
-          project_name: project.project_name,
-          user_id: project.user_id,
-          value_id: project.value_id,
-        },
-      },
     };
-  } else {
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        project: {
-          ...project,
-          user_id: project.user_id,
-          project_name: project.project_name,
-          value_id: project.value_id,
-        },
-      },
-    };
+  }
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: response
   }
 };
 
@@ -148,14 +113,13 @@ exports.fetchSingleTask = async (id) => {
       status: 404,
       message: "Task could not be fetched",
     };
-  } else {
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        project: response,
-      },
-    };
   }
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: {
+      project: response,
+    },
+  };
 };
