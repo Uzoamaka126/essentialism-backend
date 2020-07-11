@@ -4,7 +4,6 @@ const {
   generateToken,
   generateVerificationToken,
 } = require("../helpers/tokenGenerator");
-const variables = require("../helpers/variables");
 
 exports.registerUser = async (user) => {
   try {
@@ -27,20 +26,18 @@ exports.registerUser = async (user) => {
 exports.loginUser = async (userData) => {
   const { email, password } = userData;
   try {
-    // Get the email from the database
     const user = await getBy({ email });
-    // if the password from the user input matches the one in the db
-    if (user && bcrypt.compareSync(password, user.password)) {
-      const token = generateToken(user);
-      const { id, username } = user;
-      return {
-        id,
-        username,
-        email,
-        token,
-      };
-    }
-    return { message: "User email or password is incorrect!"};
+    if (!user && !bcrypt.compareSync(password, user.password)) {
+      return { type: 404, message: "User email or password is incorrect!"};
+    } 
+    const token = generateToken(user);
+    const { id, username } = user;
+    return {
+      id,
+      username,
+      email,
+      token,
+    };
   } catch (error) {
     console.log(error);
     return error;

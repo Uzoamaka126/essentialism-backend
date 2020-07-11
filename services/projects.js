@@ -1,18 +1,30 @@
 const projectData = require("../models/projects");
 
-const project = {};
+exports.fetchAllUserProjects = async (userId, valueId) => {
+  if (!userId) {
+    return {
+      status: 404,
+      message: "No user id present",
+    };
+  };
 
-exports.fetchAllUserProjects = async (id) => {
-  const response = await projectData.getUserProjects(id);
+  if (!valueId) {
+    return {
+      status: 404,
+      message: "No value id present",
+    };
+  };
+
+  const response = await projectData.getUserProjects(userId, valueId);
   if (!response) {
     return {
       status: 404,
-      message: "Project could not be fetched",
+      message: "You have no projects",
       data: {
         projects: response,
       },
     };
-  } else {
+  }
     return {
       status: 200,
       type: "success",
@@ -21,11 +33,10 @@ exports.fetchAllUserProjects = async (id) => {
         projects: response,
       },
     };
-  }
 };
 
-exports.fetchSingleProject = async (userId, projectId) => {
-  const response = await projectData.findUsersByProjects(userId, projectId);
+exports.fetchSingleProject = async (projectId) => {
+  const response = await projectData.getUserSingleProject(projectId);
   if (!response) {
     return {
       status: 404,
@@ -108,4 +119,43 @@ exports.createUserProject = async (project) => {
 exports.removeUserProjects = async (userId, project) => {
   const response = await projectData.deleteUserProjects(userId, project);
   return response;
+};
+
+/* --------- Tasks -----------------------*/
+exports.fetchAllUserTasks = async (userId, valueId, projectId) => {
+  const response = await projectData.getUserTasksByProjects(userId, valueId, projectId);
+  if (!response) {
+    return {
+      status: 404,
+      message: "Tasks could not be fetched",
+    };
+  } else {
+    return {
+      status: 200,
+      type: "success",
+      message: "Successful",
+      data: {
+        projects: response,
+      },
+    };
+  }
+};
+
+exports.fetchSingleTask = async (id) => {
+  const response = await projectData.getUserSingleTaskByProjects(id);
+  if (!response) {
+    return {
+      status: 404,
+      message: "Task could not be fetched",
+    };
+  } else {
+    return {
+      status: 200,
+      type: "success",
+      message: "Successful",
+      data: {
+        project: response,
+      },
+    };
+  }
 };

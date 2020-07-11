@@ -1,14 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const service = require("../services/projects");
-
 const { authenticate } = require("../helpers/isLoggedIn");
-
-// {
-//     project_name: body.project_name,
-//         user_id: user_id,
-//             value_id: value_id,
-//     }
 
 router.post("/create", authenticate, async (req, res) => {
   try {
@@ -39,11 +32,15 @@ router.put("/update", authenticate, async (req, res) => {
   }
 });
 
-// Get all the projects of a specific user
-router.get("/:userId", authenticate, async (req, res) => {
+/* --------- Projects ---------- */
+// Get all the projects of a specific user based on a value
+router.get("/valuesandprojects/:userId/:valueId", authenticate, async (req, res) => {
   try {
-    const { userId } = req.params;
-    const result = await service.fetchAllUserProjects(userId);
+    const { valueId, userId } = req.params;
+    const result = await service.fetchAllUserProjects(userId, valueId);
+    if (!result.data) {
+      res.status(404).json("no data");
+    }
     res.status(200).json(result);
     return result;
   } catch (error) {
@@ -52,10 +49,10 @@ router.get("/:userId", authenticate, async (req, res) => {
 });
 
 // Get a single project of a specific user
-router.get("/:userId/:projectId", authenticate, async (req, res) => {
+router.get("/project/:id", authenticate, async (req, res) => {
   try {
-    const { userId, projectId } = req.params;
-    const result = await service.fetchSingleProject(userId, projectId);
+    const { projectId } = req.params;
+    const result = await service.fetchSingleProject(projectId);
     res.status(200).json(result);
     return result;
   } catch (error) {
@@ -88,5 +85,30 @@ router.get("/:userId/:projectId", authenticate, async (req, res) => {
 //     next(error);
 //   }
 // });
+/* ------- Tasks ------------------ */
+// router.get("/:projectId", authenticate, async (req, res) => {
+//   try {
+//     const { projectId } = req.params;
+//     const { userId, valueId } = req.body;
+//     const result = await service.fetchAllUserTasks(userId, valueId, projectId);
+//     res.status(200).json(result);
+//     return result;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
+// // Get a single project of a specific user
+// router.get("/:userId/:projectId", authenticate, async (req, res) => {
+//   try {
+//     const { userId, projectId } = req.params;
+//     const result = await service.fetchSingleProject(userId, projectId);
+//     res.status(200).json(result);
+//     return result;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// });
+
 
 module.exports = router;
