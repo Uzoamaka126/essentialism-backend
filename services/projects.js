@@ -26,7 +26,7 @@ exports.fetchSingleProject = async (projectId) => {
   if (!response) {
     return {
       status: 404,
-      message: "This roject does not exist",
+      message: "This project does not exist",
     };
   }
     return {
@@ -81,45 +81,12 @@ exports.createUserProject = async (project) => {
   }
 };
 
-exports.removeUserProjects = async (userId, project) => {
-  const response = await projectData.deleteUserProjects(userId, project);
-  return response;
-};
-
-/* --------- Tasks -----------------------*/
-exports.fetchAllUserTasks = async (userId, valueId, projectId) => {
-  const response = await projectData.getUserTasksByProjects(userId, valueId, projectId);
-  if (!response) {
-    return {
-      status: 404,
-      message: "Tasks could not be fetched",
-    };
-  } else {
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        projects: response,
-      },
-    };
-  }
-};
-
-exports.fetchSingleTask = async (id) => {
-  const response = await projectData.getUserSingleTaskByProjects(id);
-  if (!response) {
-    return {
-      status: 404,
-      message: "Task could not be fetched",
-    };
-  }
+exports.removeUserProjects = async (id) => {
+  const response = await projectData.deleteUserProjects(id);
   return {
-    status: 200,
+    status: 201,
     type: "success",
-    message: "Successful",
-    data: {
-      project: response,
-    },
-  };
+    message: "Deleted Successfully",
+    data: response
+  }
 };
