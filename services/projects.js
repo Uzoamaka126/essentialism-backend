@@ -1,7 +1,25 @@
 const projectData = require("../models/projects");
+const { getById } = require("../models/auth");
 
-exports.fetchAllUserProjects = async (userId, valueId) => {
-  const response = await projectData.getUserProjects(userId, valueId);
+
+exports.fetchAllUserProjects = async (userId) => {
+  if (!userId) {
+    return {
+      status: 404,
+      message: "No user id provided",
+    };
+  }
+  const user = await getById(userId);
+
+  console.log(user);
+  if (!user) {
+    return {
+      status: 404,
+      message: "User does not exist",
+    };
+  }
+
+  const response = await projectData.getUserProjects(userId);
   if (!response) {
     return {
       status: 404,
@@ -9,6 +27,39 @@ exports.fetchAllUserProjects = async (userId, valueId) => {
       data: {
         projects: response,
       },
+    };
+  }
+    return {
+      status: 200,
+      type: "success",
+      message: "Successful",
+      data: {
+        projects: response,
+      },
+    };
+};
+
+exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
+  if (!valueId && !userId ) {
+    return {
+      status: 404,
+      message: "No user or value id provided",
+    };
+  }
+
+  const user = await getById(userId);
+  if (!user) {
+    return {
+      status: 404,
+      message: "User does not exist",
+    };
+  };
+
+  const response = await projectData.getUserProjectsByValue(userId, valueId);
+  if (!response) {
+    return {
+      status: 404,
+      message: "No response",
     };
   }
     return {

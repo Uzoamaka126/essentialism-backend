@@ -41,10 +41,10 @@ router.post("/login", validateLoginData, async (req, res) => {
   try {
     const user = req.body;
     // check if email is valid or given
-    if (!user.email || !EmailValidator.validate(user.email)) {
+    if (!user.email) {
       return res.status(400).send({
         auth: false,
-        message: "Email is required or malformed",
+        message: "Email is required",
       });
     }
     // check if password is given
@@ -62,7 +62,7 @@ router.post("/login", validateLoginData, async (req, res) => {
         message: "Email or password is wrong",
       });
     }
-    res.status(201).json(response);
+    res.status(response.status).json(response);
   } catch (error) {
     res.status(500).json({
       error: error.message,

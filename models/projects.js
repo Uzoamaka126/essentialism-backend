@@ -10,7 +10,8 @@ module.exports = {
   getUserTasksByProjects,
   addUserTasksToProjects,
   deleteTask,
-  editTask
+  editTask,
+  getUserProjectsByValue
 };
 
 async function addUserProjects(project) {
@@ -28,7 +29,7 @@ async function addUserProjects(project) {
   }
 }
 
-async function getUserProjects(userId, valueId) {
+async function getUserProjectsByValue(userId, valueId) {
   try {
     const projects = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
@@ -36,6 +37,19 @@ async function getUserProjects(userId, valueId) {
       .select("p.id", "u.id", "project_name", "v.value_name", "v.description")
       .where({ "u.id": userId })
       .andWhere({ "v.id": valueId });
+    return projects;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+async function getUserProjects(userId) {
+  try {
+    const projects = await db("projects as p")
+      .join("users as u", "u.id", "p.user_id")
+      .join("values as v", "v.id", "p.value_id")
+      .select("p.id", "u.id", "project_name", "v.value_name", "v.description")
+      .where({ "u.id": userId })
     return projects;
   } catch (error) {
     console.log(error);

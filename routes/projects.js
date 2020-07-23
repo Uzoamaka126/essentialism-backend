@@ -34,8 +34,9 @@ router.put("/update", authenticate, async (req, res) => {
 // Get all the projects of a specific user based on a value
 router.get("/", authenticate, async (req, res) => {
   try {
-    const { value_id, user_id } = req.body;
-    const result = await service.fetchAllUserProjects(user_id, value_id);
+    const { user_id } = req.body;
+
+    const result = await service.fetchAllUserProjects(user_id);
     if (!result) {
       res.status(result.status).json(result.message);
     }
@@ -45,6 +46,27 @@ router.get("/", authenticate, async (req, res) => {
     console.log(error);
   }
 });
+
+router.get("/get", authenticate, async (req, res) => {
+  try {
+    const { value_id } = req.query;
+    const { user_id } = req.body;
+
+    if (!value_id && !user_id) {
+      res.status(404).json({ "message": "No value id or user id was specified in the query string" });
+    }
+
+    const result = await service.fetchAllUserProjectsByValue(user_id, value_id);
+    if (!result) {
+      res.status(result.status).json(result.message);
+    }
+    res.status(result.status).json(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 
 router.delete("/delete", async (req, res, next) => {
   const { id } = req.body;
