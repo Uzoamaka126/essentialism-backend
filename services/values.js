@@ -10,12 +10,11 @@ async function getValues() {
         message: "Values not found",
       },
     };
-  } else {
-    return {
-      statusCode: 200,
-      data: allValues,
-    };
-  }
+  } 
+  return {
+    statusCode: 200,
+    data: allValues,
+  };
 }
 
 async function getSingleValue(id) {
@@ -28,12 +27,11 @@ async function getSingleValue(id) {
         message: "Value not found",
       },
     };
-  } else {
-    return {
-      statusCode: 200,
-      data: value
-    };
-  }
+  } 
+  return {
+    statusCode: 200,
+    data: value
+  };
 }
 
 module.exports = {
