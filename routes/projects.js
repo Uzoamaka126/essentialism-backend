@@ -67,7 +67,6 @@ router.get("/get", authenticate, async (req, res) => {
   }
 });
 
-
 router.delete("/delete", async (req, res, next) => {
   const { id } = req.body;
   try {
@@ -80,21 +79,3 @@ router.delete("/delete", async (req, res, next) => {
 });
 
 module.exports = router;
-
-
-
-// Get a single project of a specific user
-// router.get("/project/:id", authenticate, async (req, res) => {
-//   try {
-//     const { id } = req.params;
-//     const result = await service.fetchSingleProject(id);
-//     if (!result) {
-//       res.status(result.status).json(result.message);
-//       return result;
-//     }
-//     res.status(result.status).json(result);
-//     return result;
-//   } catch (error) {
-//     console.log(error);
-//   }
-// });

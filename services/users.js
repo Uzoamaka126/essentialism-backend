@@ -10,21 +10,21 @@ exports.fetchSingleUser = async (id) => {
   if (!user) {
     return { statusCode: 404, data: { message: "User does not exist" } };
   }
-  return user;
+  return { statusCode: 200, data: user };
 };
 
 exports.editUserInfo = async (userData, id) => {
   try {
-    const user = await usersData.editUser(userData, id);
-    if (!user) {
+    const checkForUser = await usersData.findUserById(id);
+    if (!checkForUser) {
       return { statusCode: 404, data: { message: "User does not exist" } };
-    } else {
-      return {
-        statusCode: 200,
-        data: {
-          user,
-        },
-      };
+    }
+    const user = await usersData.editUser(userData, id);
+    return {
+      statusCode: 200,
+      data: {
+        user,
+      },
     }
   } catch (error) {
     console.log(error);
@@ -48,8 +48,3 @@ exports.addSingleUserValues = async (values) => {
   const valuesData = await usersData.addUserValues(values);
   return valuesData;
 };
-
-// async function removeUserValues(userId, values) {
-//   const response = await valuesData.deleteUserValues(userId, values);
-//   return response;
-// }
