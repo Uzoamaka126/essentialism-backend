@@ -2,17 +2,14 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET } = require("../Config/index");
 
 function validate(req, res, next) {
-  const token = req.headers["authorization"];
+  try {
+    const token = req.headers.authorization;
+    const decoded = jwt.verify(token, process.env.SECRET);
+    req.decoded = decoded;
 
-  if (token) {
-    jwt.verify(token, JWT_SECRET, (err, user) => {
-      if (err)
-        return res.status(401).json({
-          message: "User not authenticated",
-        });
-      req.user = user;
-      next();
-    });
+    next();
+  } catch (error) {
+    res.status(401).json({ message: 'Auth Failed' });
   }
 }
 
