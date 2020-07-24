@@ -9,7 +9,7 @@ const {
 const { validate } = require("../helpers/protectedMiddleware");
 const router = express.Router();
 
-router.get("/", validate, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const result = await fetchUsers();
     res.status(200).json(result);
