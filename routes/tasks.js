@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const service = require("../services/task");
-const { authenticate } = require("../helpers/isLoggedIn");
+const { validate } = require("../helpers/protectedMiddleware");
 
-router.post("/create", authenticate, async (req, res) => {
+router.post("/create", validate, async (req, res) => {
   try {
     const { body } = req;
     const response = await service.createUserTask(body);
@@ -17,7 +17,7 @@ router.post("/create", authenticate, async (req, res) => {
 });
 
 // fetch tasks based on projects
-router.get("/", authenticate, async (req, res) => {
+router.get("/", validate, async (req, res) => {
   try {
     const { user_id, value_id, project_id } = req.body;
     const result = await service.fetchAllUserTasks(user_id, value_id, project_id);
@@ -28,7 +28,7 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-router.put("/update", authenticate, async (req, res) => {
+router.put("/update", validate, async (req, res) => {
   try {
     const { body } = req;
     const response = await service.updateTask(body);
@@ -42,7 +42,7 @@ router.put("/update", authenticate, async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res, next) => {
+router.delete("/delete", validate, async (req, res, next) => {
   const { id } = req.body;
   try {
     const response = await service.removeUserTasks(id);

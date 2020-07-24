@@ -6,10 +6,10 @@ const {
   addSingleUserValues,
   editUserInfo
 } = require("../services/users");
-const { authenticate } = require("../helpers/isLoggedIn");
+const { validate } = require("../helpers/protectedMiddleware");
 const router = express.Router();
 
-router.get("/", authenticate, async (req, res) => {
+router.get("/", validate, async (req, res) => {
   try {
     const result = await fetchUsers();
     res.status(200).json(result);
@@ -19,7 +19,7 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-router.patch("/edit", authenticate, async (req, res) => {
+router.patch("/edit", validate, async (req, res) => {
   try {
     const { id } = req.body;
     const { body } = req;
@@ -36,7 +36,7 @@ router.patch("/edit", authenticate, async (req, res) => {
   }
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await fetchSingleUser(id);

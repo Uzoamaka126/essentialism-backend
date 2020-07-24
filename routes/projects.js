@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const service = require("../services/projects");
-const { authenticate } = require("../helpers/isLoggedIn");
+const { validate } = require("../helpers/protectedMiddleware");
 
-router.post("/create", authenticate, async (req, res) => {
+router.post("/create", validate, async (req, res) => {
   try {
     const { body } = req;
     const response = await service.createUserProject(body);
@@ -16,7 +16,7 @@ router.post("/create", authenticate, async (req, res) => {
   }
 });
 
-router.put("/update", authenticate, async (req, res) => {
+router.put("/update", validate, async (req, res) => {
   try {
       const { body } = req;
     const response = await service.updateProjectName(body);
@@ -32,7 +32,7 @@ router.put("/update", authenticate, async (req, res) => {
 
 /* --------- Projects ---------- */
 // Get all the projects of a specific user based on a value
-router.get("/", authenticate, async (req, res) => {
+router.get("/", validate, async (req, res) => {
   try {
     const { user_id } = req.body;
 
@@ -47,7 +47,7 @@ router.get("/", authenticate, async (req, res) => {
   }
 });
 
-router.get("/get", authenticate, async (req, res) => {
+router.get("/get", validate, async (req, res) => {
   try {
     const { value_id } = req.query;
     const { user_id } = req.body;
@@ -67,7 +67,7 @@ router.get("/get", authenticate, async (req, res) => {
   }
 });
 
-router.delete("/delete", async (req, res, next) => {
+router.delete("/delete", validate, async (req, res, next) => {
   const { id } = req.body;
   try {
     const response = await service.removeUserProjects(id);
