@@ -1,7 +1,6 @@
 const projectData = require("../models/projects");
 const { getById } = require("../models/auth");
 
-
 exports.fetchAllUserProjects = async (userId) => {
   if (!userId) {
     return {
@@ -11,7 +10,6 @@ exports.fetchAllUserProjects = async (userId) => {
   }
   const user = await getById(userId);
 
-  console.log(user);
   if (!user) {
     return {
       status: 404,
@@ -20,22 +18,10 @@ exports.fetchAllUserProjects = async (userId) => {
   }
 
   const response = await projectData.getUserProjects(userId);
-  if (!response) {
-    return {
-      status: 404,
-      message: "You have no projects",
-      data: {
-        projects: response,
-      },
-    };
-  }
     return {
       status: 200,
       type: "success",
-      message: "Successful",
-      data: {
-        projects: response,
-      },
+      data: response,
     };
 };
 
@@ -56,12 +42,6 @@ exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
   };
 
   const response = await projectData.getUserProjectsByValue(userId, valueId);
-  if (!response) {
-    return {
-      status: 404,
-      message: "No response",
-    };
-  }
     return {
       status: 200,
       type: "success",
@@ -90,52 +70,41 @@ exports.fetchSingleProject = async (projectId) => {
 
 exports.updateProjectName = async (projectObj) => {
   const response = await projectData.editUserProject(projectObj);
-  if (!response) {
-    return {
-      status: 404,
-      message: "Project could not be created",
-      data: {
-        project: {
-          ...project,
-          id: userId,
-          project_name: response,
-          project_id: projectId,
-          value_id: valueId,
-        },
-      },
-    };
-  } else {
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        project: response,
-      },
-    };
-  }
+  return {
+    status: 200,
+    message: "Successful",
+    data: response,
+  };
 };
 
 exports.createUserProject = async (project) => {
-  const response = await projectData.addUserProjects(project);
-  if (!response) {
+  const { user_id } = project;
+  if (!user_id) {
     return {
       status: 404,
-      message: "Project could not be created",
+      message: "User Id not provided",
     };
   }
+
+  const response = await projectData.addUserProjects(project);
   return {
-    status: 200,
-    type: "success",
+    status: 201,
     message: "Successful",
     data: response
   }
 };
 
 exports.removeUserProjects = async (id) => {
+  if (!id) {
+    return {
+      status: 404,
+      message: "Project id is not provided",
+    };
+  }
+
   const response = await projectData.deleteUserProjects(id);
   return {
-    status: 201,
+    status: 200,
     type: "success",
     message: "Deleted Successfully",
     data: response

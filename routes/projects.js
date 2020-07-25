@@ -3,7 +3,7 @@ const router = express.Router();
 const service = require("../services/projects");
 const { validate } = require("../helpers/protectedMiddleware");
 
-router.post("/create", validate, async (req, res) => {
+router.post("/create", validate, async (req, res, next) => {
   try {
     const { body } = req;
     const response = await service.createUserProject(body);
@@ -13,20 +13,22 @@ router.post("/create", validate, async (req, res) => {
       res.status(response.status).json(response);
   } catch (err) {
     console.log(err);
+    next(err);
   }
 });
 
-router.put("/update", validate, async (req, res) => {
+router.put("/update", validate, async (req, res, next) => {
   try {
-      const { body } = req;
+    const { body } = req;
     const response = await service.updateProjectName(body);
-    if (response) {
-      return res.status(200).json(response);
-    } else {
-      res.status(404).json(response);
-    }
+    // if (response) {
+    //   return res.status(response.status).json(response);
+    // } else {
+      return res.status(response.status).json(response);
+    // }
   } catch (err) {
     console.log(err);
+    next(err);
   }
 });
 
@@ -71,9 +73,13 @@ router.get("/get", validate, async (req, res) => {
 // Delete a project
 router.delete("/delete/:id", validate, async (req, res, next) => {
   const { id } = req.params;
+  if (!id) {
+    return res.status(404).json({ message: "Id not provided" });
+  }
+
   try {
     const response = await service.removeUserProjects(id);
-    res.status(response.status).json(response);
+    return res.status(response.status).json(response);
   } catch (error) {
     console.log(error);
     next(error);
