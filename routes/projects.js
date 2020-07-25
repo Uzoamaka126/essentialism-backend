@@ -51,7 +51,7 @@ router.get("/", validate, async (req, res, next) => {
 router.get("/get", validate, async (req, res) => {
   try {
     const { value_id } = req.query;
-    const { user_id } = req.body;
+    const { user_id } = req.user.subject;
 
     if (!value_id && !user_id) {
       res.status(404).json({ "message": "No value id or user id was specified in the query string" });
@@ -68,8 +68,9 @@ router.get("/get", validate, async (req, res) => {
   }
 });
 
-router.delete("/delete", validate, async (req, res, next) => {
-  const { id } = req.body;
+// Delete a project
+router.delete("/delete/:id", validate, async (req, res, next) => {
+  const { id } = req.params;
   try {
     const response = await service.removeUserProjects(id);
     res.status(response.status).json(response);
