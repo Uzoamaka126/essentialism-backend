@@ -10,7 +10,7 @@ router.post("/create", validate, async (req, res, next) => {
     if (!response) {
       return res.status(response.status).json(response);
     }
-      res.status(response.status).json(response);
+      retun res.status(response.status).json(response);
   } catch (err) {
     console.log(err);
     next(err);
@@ -21,11 +21,9 @@ router.put("/update", validate, async (req, res, next) => {
   try {
     const { body } = req;
     const response = await service.updateProjectName(body);
-    // if (response) {
-    //   return res.status(response.status).json(response);
-    // } else {
-      return res.status(response.status).json(response);
-    // }
+    
+    return res.status(response.status).json(response);
+
   } catch (err) {
     console.log(err);
     next(err);
@@ -40,10 +38,9 @@ router.get("/", validate, async (req, res, next) => {
   try {
     const result = await service.fetchAllUserProjects(id);
     if (!result) {
-      res.status(result.status).json(result.message);
+      return res.status(result.status).json(result.message);
     }
-    res.status(result.status).json(result);
-    return result;
+    return res.status(result.status).json(result);
   } catch (error) {
     console.log(error);
     next(error);
@@ -56,15 +53,14 @@ router.get("/get", validate, async (req, res) => {
     const { user_id } = req.user.subject;
 
     if (!value_id && !user_id) {
-      res.status(404).json({ "message": "No value id or user id was specified in the query string" });
+      return res.status(404).json({ "message": "No value id or user id was specified in the query string" });
     }
 
     const result = await service.fetchAllUserProjectsByValue(user_id, value_id);
     if (!result) {
-      res.status(result.status).json(result.message);
+      return res.status(result.status).json(result.message);
     }
-    res.status(result.status).json(result);
-    return result;
+    return res.status(result.status).json(result);
   } catch (error) {
     console.log(error);
   }
