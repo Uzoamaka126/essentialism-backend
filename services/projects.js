@@ -92,7 +92,7 @@ exports.createUserProject = async (project) => {
 
   const response = await projectData.addUserProjects(project);
   return {
-    statusCode: 201,
+    status: 201,
     message: "Successful",
     data: response
   }
