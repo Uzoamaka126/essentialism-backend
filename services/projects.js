@@ -18,14 +18,14 @@ exports.fetchAllUserProjects = async (userId) => {
   }
 
   const response = await projectData.getUserProjects(userId);
-   if (!response) {
-    return {
-      statusCode: 404,
-      data: {
-        message: "Values not found",
-      },
-    };
-  } 
+  //  if (!response) {
+  //   return {
+  //     statusCode: 404,
+  //     data: {
+  //       message: "Values not found",
+  //     },
+  //   };
+  // } 
   return {
     statusCode: 200,
     data: {
