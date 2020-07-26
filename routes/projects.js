@@ -40,13 +40,14 @@ router.get("/", validate, async (req, res, next) => {
     if (!result) {
       return res.status(result.status).json(result.message);
     }
-    return res.status(result.status).json(result);
+    res.status(result.status).json(result);
   } catch (error) {
     console.log(error);
     next(error);
   }
 });
 
+// by values
 router.get("/get", validate, async (req, res) => {
   try {
     const { value_id } = req.query;
