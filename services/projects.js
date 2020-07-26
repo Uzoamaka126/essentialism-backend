@@ -21,7 +21,7 @@ exports.fetchAllUserProjects = async (userId) => {
     return {
       "status": 200,
       "data": {
-        "projects": response
+        "projectsfgthju": response
       }
     };
 };
@@ -44,9 +44,9 @@ exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
 
   const response = await projectData.getUserProjectsByValue(userId, valueId);
     return {
-      // status: 200,
-      // type: "success",
-      // message: "Successful",
+      status: 200,
+      type: "success",
+      message: "Successful",
       data: {
         projects: response,
       },
