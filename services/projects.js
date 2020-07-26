@@ -19,9 +19,9 @@ exports.fetchAllUserProjects = async (userId) => {
 
   const response = await projectData.getUserProjects(userId);
     return {
-      status: 200,
-      data: {
-        projects: response
+      "status": 200,
+      "data": {
+        "projects": response
       }
     };
 };
@@ -91,9 +91,9 @@ exports.createUserProject = async (project) => {
 
   const response = await projectData.addUserProjects(project);
   return {
-    status: 201,
-    message: "Successful",
-    data: response
+    "status": 201,
+    "message": "Successful",
+    "data": response
   }
 };
 
