@@ -17,11 +17,11 @@ exports.fetchAllUserProjects = async (userId) => {
     };
   }
 
-  const response = await projectData.getUserProjects(userId); 
+  const projects = await projectData.getUserProjects(userId); 
   return {
     statusCode: 200,
     data: {
-      "projects": response
+      projects
     },
   };
 };
