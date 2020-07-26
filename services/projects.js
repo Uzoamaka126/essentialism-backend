@@ -21,7 +21,9 @@ exports.fetchAllUserProjects = async (userId) => {
     return {
       status: 200,
       type: "success",
-      data: response,
+      data: {
+        projects: response
+      },
     };
 };
 
@@ -64,7 +66,9 @@ exports.fetchSingleProject = async (projectId) => {
       status: 200,
       type: "success",
       message: "Successful",
-      data: response
+      data: {
+        project: response
+      }
     };
 };
 
@@ -102,11 +106,17 @@ exports.removeUserProjects = async (id) => {
     };
   }
 
+  const findId = await projectData.findUsersByProjects(id);
+  if (!findId) {
+    return {
+      status: 404,
+      message: "Project id does not exist",
+    };
+  }
   const response = await projectData.deleteUserProjects(id);
   return {
     status: 200,
     type: "success",
-    message: "Deleted Successfully",
-    data: response
+    message: "Deleted Successfully"
   }
 };
