@@ -4,7 +4,7 @@ const { getById } = require("../models/auth");
 exports.fetchAllUserProjects = async (userId) => {
   if (!userId) {
     return {
-      status: 404,
+      statusCode: 404,
       message: "No user id provided",
     };
   }
@@ -12,7 +12,7 @@ exports.fetchAllUserProjects = async (userId) => {
 
   if (!user) {
     return {
-      status: 404,
+      statusCode: 404,
       message: "User does not exist",
     };
   }
@@ -23,7 +23,7 @@ exports.fetchAllUserProjects = async (userId) => {
       type: "success",
       data: {
         projects: response
-      },
+      }
     };
 };
 
@@ -92,7 +92,7 @@ exports.createUserProject = async (project) => {
 
   const response = await projectData.addUserProjects(project);
   return {
-    status: 201,
+    statusCode: 201,
     message: "Successful",
     data: response
   }

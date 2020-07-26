@@ -10,7 +10,7 @@ router.post("/create", validate, async (req, res, next) => {
     if (!response) {
       return res.status(response.status).json(response);
     }
-      return res.status(response.status).json(response);
+    res.status(response.status).json(response);
   } catch (err) {
     console.log(err);
     next(err);
