@@ -12,18 +12,26 @@ exports.fetchAllUserProjects = async (userId) => {
 
   if (!user) {
     return {
-      status: 404,
+      statusCode: 404,
       message: "User does not exist",
     };
   }
 
   const response = await projectData.getUserProjects(userId);
+   if (!response) {
     return {
-      "status": 200,
-      "data": {
-        "projectsfgthju": response
-      }
+      statusCode: 404,
+      data: {
+        message: "Values not found",
+      },
     };
+  } 
+  return {
+    statusCode: 200,
+    data: {
+      "projects": response
+    },
+  };
 };
 
 exports.fetchAllUserProjectsByValue = async (userId, valueId) => {

@@ -33,14 +33,10 @@ router.put("/update", validate, async (req, res, next) => {
 /* --------- Projects ---------- */
 // Get all the projects of a specific user based on a value
 router.get("/", validate, async (req, res, next) => {
-  const id = req.user.subject;
-  
   try {
-    const result = await service.fetchAllUserProjects(id);
-    if (!result) {
-      return res.status(result.status).json(result.message);
-    }
-    res.status(result.status).send(result);
+    const id = req.user.subject;
+    const projects = await service.fetchAllUserProjects(id);
+    res.status(projects.statusCode).send(projects);
   } catch (error) {
     console.log(error);
     next(error);
