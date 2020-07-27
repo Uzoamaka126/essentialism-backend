@@ -57,14 +57,14 @@ exports.fetchSingleProject = async (projectId) => {
   const response = await projectData.getUserSingleProject(projectId);
   if (!response) {
     return {
-      // status: 404,
+      status: 404,
       message: "This project does not exist",
     };
   }
     return {
-      // status: 200,
-      // type: "success",
-      // message: "Successful",
+      status: 200,
+      type: "success",
+      message: "Successful",
       data: {
         project: response
       }
@@ -91,9 +91,11 @@ exports.createUserProject = async (project) => {
 
   const response = await projectData.addUserProjects(project);
   return {
-    "status": 201,
-    "message": "Successful",
-    "data": response
+    status: 201,
+    message: "Successful",
+    data: {
+      response
+    }
   }
 };
 

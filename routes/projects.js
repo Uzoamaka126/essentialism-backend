@@ -7,6 +7,7 @@ router.post("/create", validate, async (req, res, next) => {
   try {
     const { body } = req;
     const response = await service.createUserProject(body);
+    console.log(response)
     if (!response) {
       return res.status(response.status).json(response);
     }
@@ -36,7 +37,7 @@ router.get("/", validate, async (req, res, next) => {
   try {
     const id = req.user.subject;
     const projects = await service.fetchAllUserProjects(id);
-    console.log(projects);
+    // console.log(projects);
     res.status(projects.statusCode).send(projects);
   } catch (error) {
     console.log(error);
