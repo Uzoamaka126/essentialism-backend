@@ -21,7 +21,7 @@ exports.fetchAllUserProjects = async (userId) => {
   return {
     statusCode: 200,
     data: {
-      projects
+      projects: []
     },
   };
 };
