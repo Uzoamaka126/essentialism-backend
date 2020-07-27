@@ -48,8 +48,8 @@ async function getUserProjects(userId) {
     const projects = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "p.user_id"," p.value_id", "p.project_name", "v.value_name", "v.description")
-      .where({ "u.id": userId })
+      .select("p.id", "p.user_id"," p.value_id", "project_name", "v.value_name", "v.description")
+      .where({ "p.user_id": userId })
     return projects;
   } catch (error) {
     console.log(error);

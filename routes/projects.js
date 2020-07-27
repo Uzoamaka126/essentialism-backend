@@ -39,7 +39,7 @@ router.get("/", validate, async (req, res, next) => {
     console.log(id);
     const projects = await service.fetchAllUserProjects(id);
     // console.log(projects);
-    res.status(projects.statusCode).send(projects);
+    res.status(projects.statusCode).json(projects);
   } catch (error) {
     console.log(error);
     next(error);
