@@ -18,10 +18,11 @@ router.post("/create", validate, async (req, res, next) => {
   }
 });
 
-router.put("/update", validate, async (req, res, next) => {
+router.put("/update/:id", validate, async (req, res, next) => {
   try {
     const { body } = req;
-    const response = await service.updateProjectName(body);
+    const { id } = req.params;
+    const response = await service.updateProjectName(body, id);
     
     return res.status(response.status).json(response);
 

@@ -8,6 +8,7 @@ exports.fetchAllUserProjects = async (userId) => {
       message: "No user id provided",
     };
   }
+
   const user = await getById(userId);
 
   if (!user) {
@@ -71,12 +72,32 @@ exports.fetchSingleProject = async (projectId) => {
     };
 };
 
-exports.updateProjectName = async (projectObj) => {
-  const response = await projectData.editUserProject(projectObj);
+exports.updateProjectName = async (project, id) => {
+
+  const userCheck = await getById(project.user_id);
+  
+  if (!userCheck) {
+    return {
+      status: 404,
+      message: "user does not exist"
+    };
+  }
+
+  const idCheck = await projectData.findUsersByProjects(id);
+  if (!idCheck) {
+    return {
+      status: 404,
+      message: "project does not exist"
+    };
+  }
+
+  const response = await projectData.editUserProject(project, id);
   return {
     status: 200,
     message: "Successful",
-    data: response,
+    data: {
+      project: response
+    },
   };
 };
 
