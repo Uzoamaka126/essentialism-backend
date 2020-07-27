@@ -36,6 +36,7 @@ router.put("/update", validate, async (req, res, next) => {
 router.get("/", validate, async (req, res, next) => {
   try {
     const id = req.user.subject;
+    console.log(id);
     const projects = await service.fetchAllUserProjects(id);
     // console.log(projects);
     res.status(projects.statusCode).send(projects);
