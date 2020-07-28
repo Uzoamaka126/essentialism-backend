@@ -1,6 +1,17 @@
 const projectData = require("../models/projects");
 const { getById } = require("../models/auth");
 
+exports.fetchAllProjects = async () => {
+
+  const projects = await projectData.getAllProjects(); 
+  return {
+    status: 200,
+    data: {
+      projects: projects
+    },
+  };
+};
+
 exports.fetchAllUserProjects = async (userId) => {
   if (!userId) {
     return {
@@ -54,14 +65,15 @@ exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
     };
 };
 
-exports.fetchSingleProject = async (projectId) => {
-  const response = await projectData.getUserSingleProject(projectId);
-  if (!response) {
+exports.fetchSingleProject = async (userId, id) => {
+  const response = await projectData.getUserSingleProject(userId, id);
+     if (!response) {
     return {
       status: 404,
       message: "This project does not exist",
     };
   }
+       
     return {
       status: 200,
       type: "success",

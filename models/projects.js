@@ -11,9 +11,12 @@ module.exports = {
   addUserTasksToProjects,
   deleteTask,
   editTask,
-  getUserProjectsByValue
+  getUserProjectsByValue,
+  getAllProjects,
+  // findProjectsByUser
 };
 
+// @TODO: Create a new project
 async function addUserProjects(project) {
   try {
     const ids = await db("projects as p")
@@ -29,6 +32,7 @@ async function addUserProjects(project) {
   }
 }
 
+// @TODO: Get a list of projects by user id and value id
 async function getUserProjectsByValue(userId, valueId) {
   try {
     const projects = await db("projects as p")
@@ -43,6 +47,20 @@ async function getUserProjectsByValue(userId, valueId) {
   }
 }
 
+// @TODO: Get all projects
+async function getAllProjects() {
+  try {
+    const projects = await db("projects as p")
+      .join("users as u", "u.id", "p.user_id")
+      .join("values as v", "v.id", "p.value_id")
+      .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
+    return projects;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// @TODO: Get a list of project by user id
 async function getUserProjects(userId) {
   try {
     const projects = await db("projects as p")
@@ -56,19 +74,25 @@ async function getUserProjects(userId) {
   }
 }
 
-async function getUserSingleProject(id) {
+// @TODO: Get a single project by user id and project id
+async function getUserSingleProject(userId, id) {
   try {
     const project = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "u.id", "project_name", "v.value_name", "v.description")
-      .where({ id: id });
+      .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
+      .where({
+        "p.id": id,
+        "p.user_id": userId
+      })
+      .first();
     return project;
   } catch (error) {
     console.log(error);
   }
 }
 
+// @TODO: Edit a project by user id and project id
 async function editUserProject(project, id) {
   try {
     const response = await db("projects as p")
@@ -86,6 +110,22 @@ async function editUserProject(project, id) {
   }
 }
 
+// @TODO: Get the project by user id and project id
+// async function findProjectsByUser(userId, id) {
+//   try {
+//     const project = await db("projects as p")
+//       .join("users as u", "u.id", "p.user_id")
+//       .join("values as v", "v.id", "p.value_id")
+//       .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
+//       .where({ "p.id": id, "p.user_id": userId })
+//       .first();
+//     return project;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
+
+// @TODO: Get a project by the project id
 async function findUsersByProjects(id) {
   try {
     const response = await db("projects").where({ id: id }).first();
