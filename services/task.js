@@ -1,6 +1,15 @@
 const taskData = require("../models/projects");
 
 exports.updateTask = async (task) => {
+  const { userId, project_id, id } = task;
+
+  if (!userId && !project_id && !id) {
+    return {
+      status: 404,
+      message: "An id field is missing",
+    };
+  }
+
   const response = await taskData.editTask(task);
   if (!response) {
     return {
@@ -18,19 +27,42 @@ exports.updateTask = async (task) => {
 };
 
 exports.createUserTask = async (task) => {
-  const response = await taskData.addUserTasksToProjects(task);
-  if (!response) {
+  const { userId, project_id } = task;
+  if (!userId && !project_id) {
     return {
       status: 404,
-      message: "Task could not be created",
+      message: "user or project id is missing",
     };
-  }
+  };
+
+  const response = await taskData.addUserTasksToProjects(task);
   return {
     status: 200,
     type: "success",
     message: "Successful",
-    data: response,
+    data: {
+      task: response
+    },
   };
+};
+
+exports.fetchAllUserTasks = async (userId, project_id) => {
+  if (!userId && !project_id) {
+    return {
+      status: 404,
+      message: "user or project id is missing",
+    };
+  };
+
+  const response = await taskData.getTasksByProjectId(userId, project_id);
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: {
+      tasks: response,
+    }
+  }
 };
 
 exports.removeUserTasks = async (id) => {
@@ -39,29 +71,6 @@ exports.removeUserTasks = async (id) => {
     status: 200,
     type: "success",
     message: "Deleted Successfully",
-    data: response,
+    response
   };
-};
-
-exports.fetchAllUserTasks = async (userId, valueId, projectId) => {
-  const response = await taskData.getUserTasksByProjects(
-    userId,
-    valueId,
-    projectId
-  );
-  if (!response) {
-    return {
-      status: 404,
-      message: "Tasks could not be fetched",
-    };
-  } else {
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        tasks: response,
-      },
-    };
-  }
 };
