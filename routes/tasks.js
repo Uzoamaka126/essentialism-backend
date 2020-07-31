@@ -34,7 +34,6 @@ router.get("/:id", validate, async (req, res, next) => {
 
 router.put("/update", validate, async (req, res, next) => {
   try {
-    // const { id } = req.params;
     const { body } = req;
     const response = await service.updateTask(body);
 

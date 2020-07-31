@@ -65,7 +65,7 @@ async function getUserProjects(userId) {
     const projects = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "p.user_id"," p.value_id", "project_name", "v.value_name", "v.description")
+      .select("p.id", "p.user_id", "p.value_id", "project_name", "v.value_name", "v.description")
       .where({ "p.user_id": userId })
     return projects;
   } catch (error) {
@@ -95,13 +95,10 @@ async function getUserSingleProject(userId, id) {
 async function editUserProject(project, id) {
   try {
     const response = await db("projects as p")
+      .update({ project_name: project.project_name })
       .join("users as u", "u.id", "p.user_id")
-      .join("values as v", "v.id", "u.value_id")
-      .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
-      .where({
-        "id": id,
-      })
-      .update("project_name", project.project_name);
+      .join("values as v", "v.id", "p.value_id")
+      .where({ "id": id })
     return response;
   } catch (err) {
     console.log(err);
