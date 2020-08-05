@@ -28,10 +28,17 @@ exports.updateTask = async (task) => {
 
 exports.createUserTask = async (task) => {
   const { userId, project_id } = task;
-  if (!userId && !project_id) {
+  if (!userId) {
     return {
       status: 404,
-      message: "user or project id is missing",
+      message: "user id is missing",
+    };
+  };
+
+  if (!project_id) {
+    return {
+      status: 404,
+      message: "project id is missing",
     };
   };
 

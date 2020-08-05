@@ -8,9 +8,6 @@ router.post("/create", validate, async (req, res, next) => {
   try {
     const { body } = req;
     const response = await service.createUserTask(body);
-    if (!response) {
-      return res.status(response.status).json(response);
-    }
     res.status(response.status).json(response);
   } catch (err) {
     console.log(err);

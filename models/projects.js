@@ -124,7 +124,17 @@ function deleteUserProjects(id) {
 // @TODO: Find a task by its id from the list of tasks
 async function findTasksById(id) {
   try {
-    const response = await db("tasks").where({ id: id }).first();
+    const response = await db("tasks_table as t")
+    .select(
+      "id",
+      "userId",
+      "project_id",
+      "task_name",
+      "createdAt",
+      "updatedAt"
+    )
+    .where({ "id": id })
+    .first();
     return response;
   } catch (error) {
     console.log(error);
@@ -138,16 +148,6 @@ async function addUserTasksToProjects(task) {
       .insert(task, "id")
       .join("users as u", "u.id", "t.userId")
       .join("projects as p", "p.id", "t.project_id")
-      .select(
-        "u.id",
-        "p.value_name",
-        "p.project_name",
-        "p.value_id",
-        "t.userId",
-        "t.project_id",
-        "t.task_name",
-        "t.isCompleted"
-      )
       .where({
         "project_id": task.project_id,
         "userId": task.userId,
