@@ -3,10 +3,22 @@ const taskData = require("../models/projects");
 exports.updateTask = async (task) => {
   const { userId, project_id, id } = task;
 
-  if (!userId && !project_id && !id) {
+  if (!userId) {
     return {
       status: 404,
-      message: "An id field is missing",
+      message: "User id field is missing",
+    };
+  }
+  if (!project_id) {
+    return {
+      status: 404,
+      message: "Project id field is missing",
+    };
+  }
+  if (!id) {
+    return {
+      status: 404,
+      message: "Task id field is missing",
     };
   }
 
@@ -15,7 +27,6 @@ exports.updateTask = async (task) => {
     return {
       status: 404,
       message: "Task could not be updated",
-      data: response,
     };
   }
     return {
@@ -74,10 +85,15 @@ exports.fetchAllUserTasks = async (userId, project_id) => {
 
 exports.removeUserTasks = async (id) => {
   const response = await taskData.deleteTask(id);
+  if (!response) {
+    return {
+      status: 404,
+      message: "Task could not be updated",
+    };
+  }
   return {
     status: 200,
     type: "success",
     message: "Deleted Successfully",
-    response
   };
 };

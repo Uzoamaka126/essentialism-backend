@@ -52,7 +52,14 @@ async function getAllProjects() {
     const projects = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
+      .select("p.id", 
+        "p.user_id", 
+        "project_name", 
+        "v.value_name", 
+        "v.description",
+        "createdAt",
+        "updatedAt"
+      )
     return projects;
   } catch (error) {
     console.log(error);
@@ -65,7 +72,16 @@ async function getUserProjects(userId) {
     const projects = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "p.user_id", "p.value_id", "project_name", "v.value_name", "v.description")
+      .select(
+        "p.id", 
+        "p.user_id", 
+        "p.value_id", 
+        "project_name", 
+        "v.value_name", 
+        "v.description",
+        "createdAt",
+        "updatedAt"
+      )
       .where({ "p.user_id": userId })
     return projects;
   } catch (error) {
@@ -79,7 +95,14 @@ async function getUserSingleProject(userId, id) {
     const project = await db("projects as p")
       .join("users as u", "u.id", "p.user_id")
       .join("values as v", "v.id", "p.value_id")
-      .select("p.id", "p.user_id", "project_name", "v.value_name", "v.description")
+      .select("p.id", 
+        "p.user_id", 
+        "project_name", 
+        "v.value_name", 
+        "v.description",
+        "createdAt",
+        "updatedAt"
+      )
       .where({
         "p.id": id,
         "p.user_id": userId
@@ -95,10 +118,10 @@ async function getUserSingleProject(userId, id) {
 async function editUserProject(project, id) {
   try {
     const response = await db("projects as p")
-      .update({ project_name: project.project_name })
-      .join("users as u", "u.id", "p.user_id")
-      .join("values as v", "v.id", "p.value_id")
-      .where({ "id": id })
+    .join("users as u", "u.id", "p.user_id")
+    .join("values as v", "v.id", "p.value_id")
+    .where({ "id": id })
+    .update({ project_name: project.project_name });
     return response;
   } catch (err) {
     console.log(err);
@@ -172,7 +195,9 @@ async function getTasksByProjectId(userId, project_id) {
         "t.project_id",
         "p.project_name",
         "p.value_id",
-        "t.task_name"
+        "t.task_name",
+        "t.createdAt",
+        "t.updatedAt"
       )
       .where({
         "t.project_id": project_id,
@@ -197,7 +222,9 @@ async function editTask(task) {
         "t.id",
         "p.project_name",
         "task_name",
-        "t.project_id"
+        "t.project_id",
+        "createdAt",
+        "updatedAt"
       )
       .where({
         "t.userId": task.userId,

@@ -34,7 +34,7 @@ router.put("/update", validate, async (req, res, next) => {
     const { body } = req;
     const response = await service.updateTask(body);
 
-    res.status(404).json(response);
+    res.status(response.status).json(response);
 
   } catch (err) {
     console.log(err);

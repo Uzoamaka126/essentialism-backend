@@ -13,17 +13,18 @@ exports.fetchSingleUser = async (id) => {
   return { statusCode: 200, data: user };
 };
 
-exports.editUserInfo = async (userData, id) => {
+exports.editUserInfo = async (data) => {
+  const { id } = data
   try {
     const checkForUser = await usersData.findUserById(id);
     if (!checkForUser) {
       return { statusCode: 404, data: { message: "User does not exist" } };
     }
-    const user = await usersData.editUser(userData, id);
+    const user = await usersData.editUser(data);
     return {
       statusCode: 200,
       data: {
-        user,
+        user
       },
     }
   } catch (error) {
@@ -33,18 +34,39 @@ exports.editUserInfo = async (userData, id) => {
 };
 
 exports.fetchUserValues = async (id) => {
-  const values = await usersData.findValuesByUserId(id);
+  const values = await usersData.getUserValues(id);
   if (!values) {
     return {
       statusCode: 404,
-      data: { message: "No interests found", values },
+      data: { 
+        message: "No values found"
+     },
     };
-  } else {
-    return { statusCode: 200, data: { values } };
   }
+  return { 
+    statusCode: 200, 
+    data: {
+      values 
+    } 
+  };
 };
 
-exports.addSingleUserValues = async (values) => {
-  const valuesData = await usersData.addUserValues(values);
-  return valuesData;
+exports.addSingleUserValues = async (data) => {
+  const { user_id } = data;
+  if (!user_id) {
+    return {
+      status: 404,
+      message: "user id is missing",
+    };
+  };
+
+  const response = await usersData.addUserValues(data);
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: {
+      values: response
+    },
+  };
 };
