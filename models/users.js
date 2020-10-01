@@ -7,7 +7,7 @@ module.exports = {
   deleteUserValues,
   findUserById,
   editUser,
-  getUserValues
+  getUserValues,
 };
 
 async function get() {
@@ -66,7 +66,6 @@ async function findUsersByValues(id) {
 
 async function addUserValues(values) {
   try {
-    // const [id] = await db("users_plus_values").insert(values, "id");
     const [id] = await db("users_values").insert(values, "id");
     const response = await findUsersByValues(id);
     return response;
@@ -78,19 +77,19 @@ async function addUserValues(values) {
 async function getUserValues(id) {
   try {
     const values = await db("users_values as uv")
-      .join("users as u", "uv.user_id", "u.id")
-      .join("values as v", "uv.value_id", "v.id")
-      .select("uv.id", "uv.user_id", "uv.value_id", "v.value_name")
+      .join("users as u", "u.id", "uv.user_id")
+      .join("values as v", "v.id", "uv.value_id")
+      .select("uv.id", "uv.user_id", "uv.value_id")
       .where({ "uv.user_id": id });
+      // .limit(3);
     return values;
   } catch (error) {
     console.log(error);
   }
 }
 
-function deleteUserValues(userId, values) {
-  return db("users_plus_values as uv")
-    .whereIn("name", values)
-    .andWhere({ id: userId })
+function deleteUserValues(id) {
+  return db("users_values as uv")
+    .where({ id: id })
     .del();
 }

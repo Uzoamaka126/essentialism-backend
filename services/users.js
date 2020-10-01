@@ -33,40 +33,22 @@ exports.editUserInfo = async (data) => {
   }
 };
 
-exports.fetchUserValues = async (id) => {
-  const values = await usersData.getUserValues(id);
-  if (!values) {
-    return {
-      statusCode: 404,
-      data: { 
-        message: "No values found"
-     },
-    };
-  }
-  return { 
-    statusCode: 200, 
-    data: {
-      values 
-    } 
-  };
-};
+// exports.createUserTopThreeValues = async (data) => {
+//   const { user_id } = data;
+//   if (!user_id) {
+//     return {
+//       status: 404,
+//       message: "user id is missing",
+//     };
+//   };
 
-exports.addSingleUserValues = async (data) => {
-  const { user_id } = data;
-  if (!user_id) {
-    return {
-      status: 404,
-      message: "user id is missing",
-    };
-  };
-
-  const response = await usersData.addUserValues(data);
-  return {
-    status: 200,
-    type: "success",
-    message: "Successful",
-    data: {
-      values: response
-    },
-  };
-};
+//   const response = await usersData.addUserValues(data);
+//   return {
+//     status: 200,
+//     type: "success",
+//     message: "Successful",
+//     data: {
+//       values: response
+//     },
+//   };
+// };

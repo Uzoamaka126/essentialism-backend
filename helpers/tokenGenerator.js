@@ -36,6 +36,7 @@ function generateToken(user) {
   const payload = {
     subject: user.id,
     username: user.username,
+    // roles: ["username"]
   };
   const options = {
     expiresIn: "365d",
