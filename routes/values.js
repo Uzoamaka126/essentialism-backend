@@ -30,7 +30,7 @@ router.post("/create", validate, async (req, res, next) => {
     values.map(value => {
       service.createUserTopThreeValues({ value_id: value, user_id: userId })
     })
-    res.status(200).json({ message: "Added"});
+    res.status(200).json({ message: "Added", result: values});
   } catch (err) {
     console.log(err);
     next(err);
@@ -41,7 +41,7 @@ router.post("/create", validate, async (req, res, next) => {
 router.get("/fetch/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const id2 = req.user.subject;
+    // const id2 = req.user.subject;
 
     const result = await service.fetchTopThreeValues(id);
      res.status(result.statusCode).json(result);

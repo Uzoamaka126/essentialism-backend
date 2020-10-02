@@ -8,6 +8,7 @@ module.exports = {
   findUserById,
   editUser,
   getUserValues,
+  findUsersByValues
 };
 
 async function get() {
@@ -57,12 +58,18 @@ async function findValuesByUserId(userId) {
 
 async function findUsersByValues(id) {
   try {
-    const response = await db("users_values").where({ id: id }).first();
+    const response = await db("users_values")
+      .join("users as u", "u.id", "uv.user_id")
+      .join("values as v", "v.id", "uv.value_id")
+      .select("uv.id", "uv.user_id", "uv.value_id", "v.value_name")
+      .where({ id: id })
+      .first();
     return response;
   } catch (error) {
     console.log(error);
   }
 }
+// top_three_values
 
 async function addUserValues(values) {
   try {

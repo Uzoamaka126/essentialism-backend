@@ -60,7 +60,7 @@ exports.fetchTopThreeValues = async (userId) => {
       items: values
     },
   };
-};
+};Trace
 
 exports.createUserTopThreeValues = async (data) => {
   const { user_id } = data;
@@ -70,16 +70,16 @@ exports.createUserTopThreeValues = async (data) => {
       message: "user id is missing",
     };
   };
+  const checkforId = await getById(user_id);
+  if(!checkforId) {
+    return {
+      status: 404,
+      message: "user id is not valid",
+    };
+  }
 
-  const response = await usersData.addUserValues(data);
-  return {
-    status: 200,
-    type: "success",
-    message: "Successful",
-    data: {
-      values: response
-    },
-  };
+  const newTopValues = await usersData.addUserValues(data);
+  return newTopValues;
 };
 
 exports.removeUserTopThreeValues = async (id) => {
