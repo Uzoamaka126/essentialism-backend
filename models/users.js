@@ -8,7 +8,6 @@ module.exports = {
   findUserById,
   editUser,
   getUserValues,
-  findUsersByValues
 };
 
 async function get() {
@@ -45,36 +44,25 @@ async function editUser(data) {
   }
 }
 
-async function findValuesByUserId(userId) {
+async function findValuesByUserId(id) {
   try {
-    const response = await db("users_plus_values")
-      .select("name")
-      .where({ userId });
+    const response = await db("users_plus_values as tv")
+      .select("name", "tv.userId")
+      .where({ id: id }).first();
     return response;
   } catch (error) {
     console.log(error);
   }
 }
 
-async function findUsersByValues(id) {
+async function addUserValues(value) {
   try {
-    const response = await db("users_values")
-      .join("users as u", "u.id", "uv.user_id")
-      .join("values as v", "v.id", "uv.value_id")
-      .select("uv.id", "uv.user_id", "uv.value_id", "v.value_name")
-      .where({ id: id })
-      .first();
-    return response;
-  } catch (error) {
-    console.log(error);
-  }
-}
-// top_three_values
-
-async function addUserValues(values) {
-  try {
-    const [id] = await db("users_values").insert(values, "id");
-    const response = await findUsersByValues(id);
+    const ids = await db("users_plus_values as tv")
+      .insert(value, "id")
+      .join("users as u", "u.id", "tv.userId")
+      .where({ "u.id": value.userId });
+    const id = ids[0];
+    const response = await findValuesByUserId(id);
     return response;
   } catch (error) {
     console.log(error);
@@ -83,20 +71,23 @@ async function addUserValues(values) {
 
 async function getUserValues(id) {
   try {
-    const values = await db("users_values as uv")
-      .join("users as u", "u.id", "uv.user_id")
-      .join("values as v", "v.id", "uv.value_id")
-      .select("uv.id", "uv.user_id", "uv.value_id")
-      .where({ "uv.user_id": id });
-      // .limit(3);
+    const values = await db("users_plus_values as tv")
+      .join("users as u", "u.id", "tv.userId")
+      .select("tv.id", "tv.userId", "name")
+      .where({ "tv.userId": id })
+      .limit(3);
     return values;
   } catch (error) {
     console.log(error);
   }
 }
 
-function deleteUserValues(id) {
-  return db("users_values as uv")
-    .where({ id: id })
-    .del();
+function deleteUserValues(userId, id) {
+  try {
+    return db("users_plus_values as tv")
+      .where({ "tv.userId": userId, "id": id })
+      .del();
+  } catch (error) {
+    console.log(error);
+  }
 }

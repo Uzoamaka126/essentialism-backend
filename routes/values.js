@@ -24,13 +24,11 @@ router.get("/:id", validate, async (req, res, next) => {
 
 // @TODO: Add top three user values
 router.post("/create", validate, async (req, res, next) => {
-  const values = req.body.values;
+  const value = req.body.value;
   try {
     const userId = req.user.subject;
-    values.map(value => {
-      service.createUserTopThreeValues({ value_id: value, user_id: userId })
-    })
-    res.status(200).json({ message: "Added", result: values});
+    const result = await service.createUserTopThreeValues({name: value, userId: userId})
+    res.status(200).json({ message: "Added", value: result});
   } catch (err) {
     console.log(err);
     next(err);
@@ -41,8 +39,6 @@ router.post("/create", validate, async (req, res, next) => {
 router.get("/fetch/:id", validate, async (req, res, next) => {
   try {
     const { id } = req.params;
-    // const id2 = req.user.subject;
-
     const result = await service.fetchTopThreeValues(id);
      res.status(result.statusCode).json(result);
   } catch (error) {
@@ -50,5 +46,23 @@ router.get("/fetch/:id", validate, async (req, res, next) => {
     next(error);
   }
 });
+
+router.delete("/delete/:id", validate, async (req, res, next) => {
+  const { id } = req.params;
+  const userId = req.user.subject;
+
+  if (!id || !userId) {
+    return res.status(404).json({ message: "Id not provided" });
+  }
+
+  try {
+    const response = await service.removeUserTopThreeValues(userId, id);
+    return res.status(response.status).json(response);
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
 
 module.exports = router;

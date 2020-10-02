@@ -2,7 +2,7 @@ const valuesData = require("../models/values");
 const { getById } = require("../models/auth");
 const usersData = require('../models/users');
 
-exports.getValues = async () => {
+async function getValues() {
   const allValues = await valuesData.findValues();
 
   if (!allValues) {
@@ -19,7 +19,7 @@ exports.getValues = async () => {
   };
 }
 
-exports.getSingleValue = async (id) => {
+async function getSingleValue(id) {
   const value = await valuesData.findValueById(id);
 
   if (!value) {
@@ -36,7 +36,7 @@ exports.getSingleValue = async (id) => {
   };
 }
 
-exports.fetchTopThreeValues = async (userId) => {
+async function fetchTopThreeValues(userId) {
   if (!userId) {
     return {
       statusCode: 404,
@@ -60,17 +60,17 @@ exports.fetchTopThreeValues = async (userId) => {
       items: values
     },
   };
-};Trace
+};
 
-exports.createUserTopThreeValues = async (data) => {
-  const { user_id } = data;
-  if (!user_id) {
+async function createUserTopThreeValues (data) {
+  const { userId } = data;
+  if (!userId) {
     return {
       status: 404,
       message: "user id is missing",
     };
   };
-  const checkforId = await getById(user_id);
+  const checkforId = await getById(userId);
   if(!checkforId) {
     return {
       status: 404,
@@ -82,15 +82,15 @@ exports.createUserTopThreeValues = async (data) => {
   return newTopValues;
 };
 
-exports.removeUserTopThreeValues = async (id) => {
-  if (!id) {
+async function removeUserTopThreeValues (userId, id) {
+  if (!id || !userId) {
     return {
       status: 404,
-      message: "value id is not provided",
+      message: "value or user id is not provided",
     };
   }
 
-  const response = await usersData.deleteUserValues(id);
+  const response = await usersData.deleteUserValues(userId, id);
   return {
     status: 200,
     type: "success",
@@ -98,10 +98,10 @@ exports.removeUserTopThreeValues = async (id) => {
   }
 };
 
-// module.exports = {
-//   getValues,
-//   getSingleValue,
-//   // fetchTopThreeValues,
-//   createUserTopThreeValues,
-//   removeUserTopThreeValues
-// };
+module.exports = {
+  getValues,
+  getSingleValue,
+  fetchTopThreeValues,
+  createUserTopThreeValues,
+  removeUserTopThreeValues
+};
