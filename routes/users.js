@@ -2,10 +2,8 @@ const express = require("express");
 const {
   fetchUsers,
   fetchSingleUser,
-  fetchTopThreeValues,
-  createUserTopThreeValues,
   editUserInfo
-} = require("../services/values");
+} = require("../services/users");
 const { validate } = require("../helpers/protectedMiddleware");
 const router = express.Router();
 
