@@ -28,7 +28,7 @@ router.post("/create", validate, async (req, res, next) => {
   try {
     const userId = req.user.subject;
     const result = await service.createUserTopThreeValues({name: value, userId: userId})
-    res.status(200).json({ message: "Added", value: result});
+    res.status(201).json({ message: "Added", value: result});
   } catch (err) {
     console.log(err);
     next(err);
