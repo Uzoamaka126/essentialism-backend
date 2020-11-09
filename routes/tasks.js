@@ -46,7 +46,7 @@ router.delete("/delete/:id", validate, async (req, res, next) => {
   const { id } = req.params;
   try {
     const response = await service.removeUserTasks(id);
-    res.status(response.status).json(response);
+    res.status(response.status).json(response.message);
   } catch (error) {
     console.log(error);
     next(error);
