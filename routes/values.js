@@ -41,9 +41,9 @@ router.post("/create", validate, async (req, res, next) => {
 // @TODO: Fetch top three user values
 router.post("/fetchValues", validate, async (req, res, next) => {
   try {
-    const { id } = req.body;
-    const result = await service.fetchTopThreeValues(id);
-    res.status(result.statusCode).json(result);
+    const { userId } = req.body;
+    const result = await service.fetchTopThreeValues(userId);
+    res.status(result.status).json(result);
   } catch (error) {
     console.log(error);
     next(error);

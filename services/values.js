@@ -39,7 +39,7 @@ async function getSingleValue(id) {
 async function fetchTopThreeValues(userId) {
   if (!userId) {
     return {
-      statusCode: 404,
+      status: 404,
       message: "No user id provided",
     };
   }
@@ -47,16 +47,23 @@ async function fetchTopThreeValues(userId) {
   const user = await getById(userId);
   if (!user) {
     return {
-      statusCode: 404,
+      status: 404,
       message: "User does not exist",
     };
   }
 
-  const values = await usersData.getUserValues(userId);
+  const response = await usersData.getUserValues(userId);
+  if (!response) {
+    return {
+      status: 200,
+      isSuccessful: false,
+      data: response,
+    };
+  }
   return {
-    statusCode: 200,
+    status: 200,
     data: {
-      items: values,
+      response
     },
   };
 }

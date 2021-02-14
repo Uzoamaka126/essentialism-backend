@@ -10,7 +10,6 @@ function findValues() {
 }
 
 function findValueById(id) {
-  console.log(id)
   return db("values")
     .select("id", "value_name", "description")
     .where({ id: id })

@@ -50,15 +50,13 @@ async function findValuesByUserId(id) {
     .join("users as u", "u.id", "ttv.userId")
     .join("values as v", "v.id", "ttv.valueId")
       .select(
-        "id", 
-        "topValuesId", 
-        "ttv.userId", 
+        "ttv.id", 
         "u.username", 
         "v.value_name", 
         "v.description",
         "v.id"
       )
-      .where({ "u.id": value.userId, "v.id": value.valueId })
+      .where({ id : id })
       .first();
     return response;
   } catch (error) {
@@ -83,10 +81,19 @@ async function addUserValues(value) {
 
 async function getUserValues(id) {
   try {
-    const values = await db("users_plus_values as tv")
-      .join("users as u", "u.userId", "tv.userId")
-      .select("tv.id", "tv.userId", "name")
-      .where({ "tv.userId": id })
+    const values = await db("top_three_values as ttv")
+      .join("users as u", "ttv.userId", "u.id")
+      .join("values as v", "ttv.valueId", "v.id")
+      .select(
+        "ttv.id", 
+        "u.userId", 
+        "ttv.userId", 
+        "ttv.valueId",
+        "v.value_name", 
+        "v.description", 
+        "topValuesId"
+      )
+      .where({ "u.id": id })
       .limit(3);
     return values;
   } catch (error) {
