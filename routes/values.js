@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const service = require("../services/values");
-const { validate } = require('../helpers/protectedMiddleware')
+const { validate } = require("../helpers/protectedMiddleware");
 
 router.get("/", validate, async (req, res, next) => {
   try {
@@ -24,11 +24,14 @@ router.get("/:id", validate, async (req, res, next) => {
 
 // @TODO: Add top three user values
 router.post("/create", validate, async (req, res, next) => {
-  const value = req.body.value;
+  const { value, userId, id } = req.body;
   try {
-    const userId = req.user.subject;
-    const result = await service.createUserTopThreeValues({name: value, userId: userId})
-    res.status(201).json({ message: "Added", value: result});
+    const result = await service.createUserTopThreeValues({
+      name: value,
+      userId: userId,
+      id: id,
+    });
+    res.status(result.status).json({ value: result });
   } catch (err) {
     console.log(err);
     next(err);
@@ -36,11 +39,11 @@ router.post("/create", validate, async (req, res, next) => {
 });
 
 // @TODO: Fetch top three user values
-router.get("/fetch/:id", validate, async (req, res, next) => {
+router.post("/fetchValues", validate, async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.body;
     const result = await service.fetchTopThreeValues(id);
-     res.status(result.statusCode).json(result);
+    res.status(result.statusCode).json(result);
   } catch (error) {
     console.log(error);
     next(error);
@@ -63,6 +66,5 @@ router.delete("/delete/:id", validate, async (req, res, next) => {
     next(error);
   }
 });
-
 
 module.exports = router;

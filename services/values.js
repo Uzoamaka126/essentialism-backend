@@ -1,6 +1,6 @@
 const valuesData = require("../models/values");
-const { getById } = require("../models/auth");
-const usersData = require('../models/users');
+const { getById, getByUserId } = require("../models/auth");
+const usersData = require("../models/users");
 
 async function getValues() {
   const allValues = await valuesData.findValues();
@@ -12,7 +12,7 @@ async function getValues() {
         message: "Values not found",
       },
     };
-  } 
+  }
   return {
     statusCode: 200,
     data: allValues,
@@ -29,10 +29,10 @@ async function getSingleValue(id) {
         message: "Value not found",
       },
     };
-  } 
+  }
   return {
     statusCode: 200,
-    data: value
+    data: value,
   };
 }
 
@@ -53,36 +53,50 @@ async function fetchTopThreeValues(userId) {
     };
   }
 
-  const values = await usersData.getUserValues(userId); 
+  const values = await usersData.getUserValues(userId);
   return {
     statusCode: 200,
     data: {
-      items: values
+      items: values,
     },
   };
-};
+}
 
-async function createUserTopThreeValues (data) {
-  const { userId } = data;
+async function createUserTopThreeValues(data) {
+  const { userId, id, name } = data;
   if (!userId) {
     return {
       status: 404,
       message: "user id is missing",
     };
-  };
-  const checkforId = await getById(userId);
-  if(!checkforId) {
+  }
+  const checkforId = await getByUserId(userId);
+  if (!checkforId) {
     return {
       status: 404,
       message: "user id is not valid",
     };
   }
 
-  const newTopValues = await usersData.addUserValues(data);
-  return newTopValues;
-};
+  const response = await usersData.addUserValues({
+    name: name,
+    userId: id
+  });
+  if (!response) {
+    return {
+      status: 200,
+      isSuccessful: false,
+      data: response,
+    };
+  }
+  return {
+    status: 200,
+    isSuccessful: true,
+    data: response,
+  };
+}
 
-async function removeUserTopThreeValues (userId, id) {
+async function removeUserTopThreeValues(userId, id) {
   if (!id || !userId) {
     return {
       status: 404,
@@ -94,14 +108,14 @@ async function removeUserTopThreeValues (userId, id) {
   return {
     status: 200,
     type: "success",
-    message: "Deleted Successfully"
-  }
-};
+    message: "Deleted Successfully",
+  };
+}
 
 module.exports = {
   getValues,
   getSingleValue,
   fetchTopThreeValues,
   createUserTopThreeValues,
-  removeUserTopThreeValues
+  removeUserTopThreeValues,
 };

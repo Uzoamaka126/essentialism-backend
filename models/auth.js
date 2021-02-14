@@ -5,6 +5,7 @@ module.exports = {
   getBy,
   addNewUser,
   deleteAllUsers,
+  getByUserId,
 };
 
 async function addNewUser(user) {
@@ -24,6 +25,14 @@ function getById(id) {
     .where({ id: id })
     .first();
 }
+
+function getByUserId(id) {
+  return db("users")
+    .select("username", "email", "userId", "id")
+    .where({ userId: id })
+    .first();
+}
+
 
 function getBy(filter) {
   return db("users")

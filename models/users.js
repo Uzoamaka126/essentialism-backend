@@ -12,7 +12,7 @@ module.exports = {
 
 async function get() {
   try {
-    const values = await db("users").select("userId", "username", "email");
+    const values = await db("users").select("userId", "username", "email", "id");
     return values;
   } catch (error) {
     console.log(error);
@@ -60,8 +60,8 @@ async function addUserValues(value) {
   try {
     const ids = await db("users_plus_values as tv")
       .insert(value, "id")
-      .join("users as u", "u.userId", "tv.userId")
-      .where({ "u.userId": value.userId });
+      .join("users as u", "u.id", "tv.userId")
+      .where({ "u.id": value.id });
     const id = ids[0];
     const response = await findValuesByUserId(id);
     return response;
