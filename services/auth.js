@@ -24,8 +24,8 @@ exports.registerUser = async (user) => {
     const { username, email, userId } = user;
     return {
       status: 201,
-      type: "success",
-      message: "Successful",
+      isSuccessful: true,
+      message: "Operation Successful",
       data: {
         username,
         email,
@@ -45,7 +45,6 @@ exports.loginUser = async (userData) => {
     if (!user || typeof user === "undefined") {
       return { status: 404, message: "User does not exist!" };
     }
-    // console.log(user)
     if (!user && !bcrypt.compareSync(password, user.password)) {
       return { status: 404, message: "Password is incorrect!" };
     }
@@ -53,8 +52,8 @@ exports.loginUser = async (userData) => {
     const { userId, username } = user;
     return {
       status: 200,
-      type: "success",
-      message: "Successful",
+      isSuccessful: true,
+      message: "Operation Successful",
       data: {
         userId,
         username,
