@@ -24,14 +24,14 @@ router.get("/:id", validate, async (req, res, next) => {
 
 // @TODO: Add top three user values
 router.post("/create", validate, async (req, res, next) => {
-  const { value, userId, id } = req.body;
+  const { valueId, userId, topValuesId } = req.body;
   try {
     const result = await service.createUserTopThreeValues({
-      name: value,
-      userId: userId,
-      id: id,
+      userId,
+      valueId,
+      topValuesId,
     });
-    res.status(result.status).json({ value: result });
+    res.status(result.status).json({ data: result });
   } catch (err) {
     console.log(err);
     next(err);

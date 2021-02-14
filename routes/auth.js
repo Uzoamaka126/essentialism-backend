@@ -70,7 +70,7 @@ router.post("/login", validateLoginData, async (req, res) => {
 
 //
 // @TODO: Delete all users
-router.delete("/delete/", validate, async (req, res, next) => {
+router.delete("/delete", validate, async (req, res, next) => {
   try {
     const { email } = req.body;
     if (!email) {

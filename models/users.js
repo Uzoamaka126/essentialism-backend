@@ -46,9 +46,19 @@ async function editUser(data) {
 
 async function findValuesByUserId(id) {
   try {
-    const response = await db("users_plus_values as tv")
-      .select("name", "tv.userId")
-      .where({ userId: id })
+    const response = await db("top_three_values as ttv")
+    .join("users as u", "u.id", "ttv.userId")
+    .join("values as v", "v.id", "ttv.valueId")
+      .select(
+        "id", 
+        "topValuesId", 
+        "ttv.userId", 
+        "u.username", 
+        "v.value_name", 
+        "v.description",
+        "v.id"
+      )
+      .where({ "u.id": value.userId, "v.id": value.valueId })
       .first();
     return response;
   } catch (error) {
@@ -58,10 +68,11 @@ async function findValuesByUserId(id) {
 
 async function addUserValues(value) {
   try {
-    const ids = await db("users_plus_values as tv")
+    const ids = await db("top_three_values as ttv")
       .insert(value, "id")
-      .join("users as u", "u.id", "tv.userId")
-      .where({ "u.id": value.id });
+      .join("users as u", "u.id", "ttv.userId")
+      .join("values as v", "v.id", "ttv.valueId")
+      .where({ "u.id": value.userId, "v.id": value.valueId });
     const id = ids[0];
     const response = await findValuesByUserId(id);
     return response;

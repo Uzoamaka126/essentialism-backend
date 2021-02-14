@@ -16,12 +16,13 @@ exports.registerUser = async (user) => {
     const { password } = user;
 
     user.userId = uuidv4();
+    user.id = Math.floor(Math.random() * 1000000000);
     const hash = bcrypt.hashSync(password, 10);
     user.password = hash;
     user.jwt = generateVerificationToken(15, "12345abcde");
     const response = await addNewUser(user);
     const token = generateToken(response);
-    const { username, email, userId } = user;
+    const { username, email, userId, id } = user;
     return {
       status: 201,
       isSuccessful: true,
@@ -31,6 +32,7 @@ exports.registerUser = async (user) => {
         email,
         token,
         userId,
+        id
       },
     };
   } catch (error) {

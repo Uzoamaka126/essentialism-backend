@@ -34,7 +34,7 @@ function generateVerificationToken(len, arr) {
 function generateToken(user) {
   // Use jwt to create a new JWT Payload containing
   const payload = {
-    subject: user.id,
+    subject: user.userId,
     username: user.username,
     // roles: ["username"]
   };

@@ -1,5 +1,5 @@
 exports.up = function (knex) {
-    return knex.schema.createTable("projects", (table) => {
+    return knex.schema.createTable("top_three_values", (table) => {
         table.increments("id");
         table
             .integer("userId")
@@ -17,8 +17,7 @@ exports.up = function (knex) {
             .inTable("values")
             .onUpdate("CASCADE")
             .onDelete("CASCADE");
-        table.string("title").notNullable();
-        table.uuid("projectId").notNullable().unique();
+        table.uuid("topValuesId").notNullable().unique();
         table
             .timestamp("createdAt")
             .notNullable()
@@ -31,7 +30,7 @@ exports.up = function (knex) {
 
 exports.down = function (knex) {
     return knex.schema
+    .dropTableIfExists("users")
     .dropTableIfExists("values")
-        .dropTableIfExists("users")
-        .dropTableIfExists("projects");
+    .dropTableIfExists("top_three_values");
 };

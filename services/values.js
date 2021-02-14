@@ -1,5 +1,5 @@
 const valuesData = require("../models/values");
-const { getById, getByUserId } = require("../models/auth");
+const { getById } = require("../models/auth");
 const usersData = require("../models/users");
 
 async function getValues() {
@@ -45,7 +45,6 @@ async function fetchTopThreeValues(userId) {
   }
 
   const user = await getById(userId);
-
   if (!user) {
     return {
       statusCode: 404,
@@ -63,25 +62,35 @@ async function fetchTopThreeValues(userId) {
 }
 
 async function createUserTopThreeValues(data) {
-  const { userId, id, name } = data;
+  const { userId, valueId, topValuesId } = data;
   if (!userId) {
     return {
       status: 404,
       message: "user id is missing",
     };
   }
-  const checkforId = await getByUserId(userId);
-  if (!checkforId) {
+  const checkforUserId = await getById(userId);
+  if (!checkforUserId) {
     return {
       status: 404,
       message: "user id is not valid",
     };
   }
 
+  const checkForValueId = await valuesData.findValueById(valueId)
+  if (!checkForValueId) {
+    return {
+      status: 404,
+      message: "value does not exist",
+    };
+  }
+
   const response = await usersData.addUserValues({
-    name: name,
-    userId: id
+    userId,
+    valueId,
+    topValuesId
   });
+
   if (!response) {
     return {
       status: 200,
