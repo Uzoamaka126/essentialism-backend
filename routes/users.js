@@ -27,11 +27,43 @@ router.patch("/edit", validate, async (req, res) => {
   }
 });
 
+router.get("/", validate, async (req, res) => {
+  try {
+    const result = await fetchUsers();
+    if (!result) {
+      return res.status(200).json({
+        message: "Operation Successful",
+        isSuccessful: false,
+        data: result,
+      });
+    }
+    return res.status(200).json({
+      message: "Operation Successful",
+      isSuccessful: true,
+      data: result
+    });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+
 router.get("/:id", validate, async (req, res) => {
   try {
     const { id } = req.params;
     const result = await fetchSingleUser(id);
-    return res.status(result.statusCode).json(result);
+    if (!result) {
+      return res.status(200).json({
+        message: "Operation Successful",
+        isSuccessful: false,
+        data: result,
+      });
+    }
+    return res.status(200).json({
+      message: "Operation Successful",
+      isSuccessful: true,
+      data: result,
+    });
   } catch (error) {
     console.log(error);
   }

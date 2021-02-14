@@ -4,6 +4,7 @@ module.exports = {
   getById,
   getBy,
   addNewUser,
+  deleteAllUsers,
 };
 
 async function addNewUser(user) {
@@ -19,14 +20,21 @@ async function addNewUser(user) {
 
 function getById(id) {
   return db("users")
-    .select("id", "username", "email")
+    .select("username", "email", "userId")
     .where({ id: id })
     .first();
 }
 
 function getBy(filter) {
   return db("users")
-    .select("id", "username", "email", "password")
+    .select("username", "email", "userId")
     .where(filter)
     .first();
+}
+
+function deleteAllUsers(email) {
+  return db("users")
+    // .select("id", "email", "password", "jwt", "isVerified", "username")
+    .where({ email: email })
+    .del();  
 }

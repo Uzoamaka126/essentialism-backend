@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports = {
   generateToken,
-  // generateVerificationToken,
+  generateVerificationToken,
 };
 
 // function generateToken(user) {
@@ -23,13 +23,13 @@ module.exports = {
 //   return result;
 // }
 
-// function generateVerificationToken(len, arr) {
-//   var result = "";
-//   for (var i = len; i > 0; i--) {
-//     result += arr[Math.floor(Math.random() * arr.length)];
-//   }
-//   return result;
-// }
+function generateVerificationToken(len, arr) {
+  var result = "";
+  for (var i = len; i > 0; i--) {
+    result += arr[Math.floor(Math.random() * arr.length)];
+  }
+  return result;
+}
 
 function generateToken(user) {
   // Use jwt to create a new JWT Payload containing

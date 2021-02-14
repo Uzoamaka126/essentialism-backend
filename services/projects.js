@@ -2,12 +2,11 @@ const projectData = require("../models/projects");
 const { getById } = require("../models/auth");
 
 exports.fetchAllProjects = async () => {
-
-  const projects = await projectData.getAllProjects(); 
+  const projects = await projectData.getAllProjects();
   return {
     status: 200,
     data: {
-      projects: projects
+      projects: projects,
     },
   };
 };
@@ -29,17 +28,17 @@ exports.fetchAllUserProjects = async (userId) => {
     };
   }
 
-  const projects = await projectData.getUserProjects(userId); 
+  const projects = await projectData.getUserProjects(userId);
   return {
     statusCode: 200,
     data: {
-      projects: projects
+      projects: projects,
     },
   };
 };
 
 exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
-  if (!valueId && !userId ) {
+  if (!valueId && !userId) {
     return {
       status: 404,
       message: "No user or value id provided",
@@ -52,46 +51,45 @@ exports.fetchAllUserProjectsByValue = async (userId, valueId) => {
       status: 404,
       message: "User does not exist",
     };
-  };
+  }
 
   const response = await projectData.getUserProjectsByValue(userId, valueId);
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        projects: response,
-      },
-    };
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: {
+      projects: response,
+    },
+  };
 };
 
 exports.fetchSingleProject = async (userId, id) => {
   const response = await projectData.getUserSingleProject(userId, id);
-     if (!response) {
+  if (!response) {
     return {
       status: 404,
       message: "This project does not exist",
     };
   }
-       
-    return {
-      status: 200,
-      type: "success",
-      message: "Successful",
-      data: {
-        project: response
-      }
-    };
+
+  return {
+    status: 200,
+    type: "success",
+    message: "Successful",
+    data: {
+      project: response,
+    },
+  };
 };
 
 exports.updateProjectName = async (project, id) => {
-
   const userCheck = await getById(project.user_id);
-  
+
   if (!userCheck) {
     return {
       status: 404,
-      message: "user does not exist"
+      message: "user does not exist",
     };
   }
 
@@ -99,7 +97,7 @@ exports.updateProjectName = async (project, id) => {
   if (!idCheck) {
     return {
       status: 404,
-      message: "project does not exist"
+      message: "project does not exist",
     };
   }
 
@@ -108,7 +106,7 @@ exports.updateProjectName = async (project, id) => {
     status: 200,
     message: "Successful",
     data: {
-      project: response
+      project: response,
     },
   };
 };
@@ -118,7 +116,7 @@ exports.createUserProject = async (project) => {
   if (!user_id) {
     return {
       status: 404,
-      message: "User Id not provided"
+      message: "User Id not provided",
     };
   }
 
@@ -127,9 +125,9 @@ exports.createUserProject = async (project) => {
     status: 201,
     message: "Successful",
     data: {
-      response
-    }
-  }
+      response,
+    },
+  };
 };
 
 exports.removeUserProjects = async (id) => {
@@ -151,6 +149,6 @@ exports.removeUserProjects = async (id) => {
   return {
     status: 200,
     type: "success",
-    message: "Deleted Successfully"
-  }
+    message: "Deleted Successfully",
+  };
 };

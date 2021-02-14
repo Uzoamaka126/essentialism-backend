@@ -1,6 +1,6 @@
 
 exports.up = function(knex) {
-    return knex.schema.createTable("users_values", (table) => {
+    return knex.schema.createTable("users_values_alter", (table) => {
       table.increments("id");
       table
         .integer("user_id")
@@ -19,6 +19,6 @@ exports.up = function(knex) {
  };
  
  exports.down = function(knex) {
-   return knex.schema.dropTableIfExists("users_values");
+   return knex.schema.dropTableIfExists("users_values_alter");
  };
  
