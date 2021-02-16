@@ -11,14 +11,39 @@ module.exports = {
   getAllProjects
 }
 
+// @TODO: Get a project by the project id
+async function findUsersByProjects (id) {
+  try {
+    const response = await db('projects as p')
+      .join('users as u', 'u.id', 'p.userId')
+      .join('values as v', 'v.id', 'p.valueId')
+      .select(
+        'p.id',
+        'p.userId',
+        'p.valueId',
+        'p.projectId',
+        'title',
+        'v.value_name',
+        'v.description',
+        'createdAt',
+        'updatedAt'
+      )
+      .where({ 'p.id': id })
+      .first()
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 // @TODO: Create a new project
 async function addUserProjects (project) {
   try {
     const ids = await db('projects as p')
       .insert(project, 'id')
-      .join('users as u', 'u.id', 'p.user_id')
-      .join('values as v', 'v.id', 'p.value_id')
-      .where({ 'u.id': project.user_id, 'v.id': project.value_id })
+      .join('users as u', 'u.id', 'p.userId')
+      .join('values as v', 'v.id', 'p.valueId')
+      .where({ 'u.id': project.userId, 'v.id': project.valueId })
     const id = ids[0]
     const response = await findUsersByProjects(id)
     return response
@@ -46,15 +71,18 @@ async function getUserProjectsByValue (userId, valueId) {
 async function getAllProjects () {
   try {
     const projects = await db('projects as p')
-      .join('users as u', 'u.id', 'p.user_id')
-      .join('values as v', 'v.id', 'p.value_id')
-      .select('p.id',
-        'p.user_id',
-        'project_name',
+      .join('users as u', 'u.id', 'p.userId')
+      .join('values as v', 'v.id', 'p.valueId')
+      .select(
+        'p.id',
+        'p.userId',
+        'title',
         'v.value_name',
         'v.description',
         'createdAt',
-        'updatedAt'
+        'updatedAt',
+        'u.id',
+        'u.userId'
       )
     return projects
   } catch (error) {
@@ -66,19 +94,20 @@ async function getAllProjects () {
 async function getUserProjects (userId) {
   try {
     const projects = await db('projects as p')
-      .join('users as u', 'u.id', 'p.user_id')
-      .join('values as v', 'v.id', 'p.value_id')
+      .join('users as u', 'u.id', 'p.userId')
+      .join('values as v', 'v.id', 'p.valueId')
       .select(
         'p.id',
-        'p.user_id',
-        'p.value_id',
-        'project_name',
+        'p.userId',
+        'p.valueId',
+        'title',
+        'p.projectId',
         'v.value_name',
         'v.description',
         'createdAt',
         'updatedAt'
       )
-      .where({ 'p.user_id': userId })
+      .where({ 'u.id': userId })
     return projects
   } catch (error) {
     console.log(error)
@@ -122,16 +151,6 @@ async function editUserProject (project, id) {
   } catch (err) {
     console.log(err)
     return err
-  }
-}
-
-// @TODO: Get a project by the project id
-async function findUsersByProjects (id) {
-  try {
-    const response = await db('projects').where({ id: id }).first()
-    return response
-  } catch (error) {
-    console.log(error)
   }
 }
 

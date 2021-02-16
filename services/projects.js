@@ -1,3 +1,4 @@
+const { v4: uuidv4 } = require('uuid')
 const projectData = require('../models/projects')
 const { getById } = require('../models/auth')
 
@@ -19,20 +20,36 @@ exports.fetchAllUserProjects = async (userId) => {
     }
   }
 
-  const user = await getById(userId)
+  try {
+    const user = await getById(userId)
 
-  if (!user) {
-    return {
-      statusCode: 404,
-      message: 'User does not exist'
+    if (!user) {
+      return {
+        status: 404,
+        message: 'User does not exist'
+      }
     }
-  }
 
-  const projects = await projectData.getUserProjects(userId)
-  return {
-    statusCode: 200,
-    data: {
-      projects: projects
+    const response = await projectData.getUserProjects(userId)
+    if (!response) {
+      return {
+        status: 200,
+        isSuccessful: false,
+        message: 'Unable to fetch projects'
+      }
+    }
+    return {
+      status: 200,
+      isSuccessful: true,
+      data: {
+        projects: response
+      }
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      status: error.response.status === 500 ? 500 : 400,
+      isSuccessful: false
     }
   }
 }
@@ -112,20 +129,42 @@ exports.updateProjectName = async (project, id) => {
 }
 
 exports.createUserProject = async (project) => {
-  const { user_id } = project
-  if (!user_id) {
+  if (!project.userId) {
     return {
       status: 404,
       message: 'User Id not provided'
     }
   }
 
-  const response = await projectData.addUserProjects(project)
-  return {
-    status: 201,
-    message: 'Successful',
-    data: {
-      response
+  try {
+    const user = await getById(project.userId)
+    if (!user) {
+      return {
+        status: 404,
+        message: 'User does not exist'
+      }
+    }
+    project.projectId = uuidv4()
+    project.id = Math.floor(Math.random() * 1000000000)
+
+    const response = await projectData.addUserProjects(project)
+    if (!response) {
+      return {
+        status: 200,
+        isSuccessful: false,
+        message: 'Unable to create a new project'
+      }
+    }
+    return {
+      status: 200,
+      isSuccessful: true,
+      data: response
+    }
+  } catch (error) {
+    console.log(error)
+    return {
+      status: error.response.status === 500 ? 500 : 400,
+      isSuccessful: false
     }
   }
 }

@@ -6,9 +6,7 @@ const { validate } = require('../helpers/protectedMiddleware')
 // @TODO: Create a new project
 router.post('/create', validate, async (req, res, next) => {
   try {
-    const { body } = req
-    const response = await service.createUserProject(body)
-    console.log(response)
+    const response = await service.createUserProject(req.body)
     if (!response) {
       return res.status(response.status).json(response)
     }
@@ -45,12 +43,11 @@ router.get('/projects', validate, async (req, res, next) => {
 })
 
 // @TODO: Get a list of projects by user id
-router.get('/', validate, async (req, res, next) => {
+router.post('/fetchProjects', validate, async (req, res, next) => {
   try {
-    const id = req.user.subject
-    console.log(id)
-    const projects = await service.fetchAllUserProjects(id)
-    res.status(projects.statusCode).json(projects)
+    const userId = req.body.userId
+    const result = await service.fetchAllUserProjects(userId)
+    res.status(result.status).json(result)
   } catch (error) {
     console.log(error)
     next(error)
@@ -78,7 +75,11 @@ router.get('/get', validate, async (req, res) => {
     const { user_id } = req.user.subject
 
     if (!value_id && !user_id) {
-      return res.status(404).json({ message: 'No value id or user id was specified in the query string' })
+      return res
+        .status(404)
+        .json({
+          message: 'No value id or user id was specified in the query string'
+        })
     }
 
     const result = await service.fetchAllUserProjectsByValue(user_id, value_id)
