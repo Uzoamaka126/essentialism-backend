@@ -140,13 +140,13 @@ async function getUserSingleProject (userId, id) {
 }
 
 // @TODO: Edit a project by user id and project id
-async function editUserProject (project, id) {
+async function editUserProject (project) {
   try {
     const response = await db('projects as p')
-      .join('users as u', 'u.id', 'p.user_id')
-      .join('values as v', 'v.id', 'p.value_id')
-      .where({ id: id })
-      .update({ project_name: project.project_name })
+      .join('users as u', 'u.id', 'p.userId')
+      .join('values as v', 'v.id', 'p.valueId')
+      .where({ id: project.id })
+      .update({ 'p.title': project.title, 'p.valueId': project.valueId })
     return response
   } catch (err) {
     console.log(err)

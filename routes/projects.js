@@ -18,11 +18,9 @@ router.post('/create', validate, async (req, res, next) => {
 })
 
 // @TODO: Update a single project
-router.put('/update/:id', validate, async (req, res, next) => {
+router.put('/update', validate, async (req, res, next) => {
   try {
-    const { body } = req
-    const { id } = req.params
-    const response = await service.updateProjectName(body, id)
+    const response = await service.updateProject(req.body)
 
     return res.status(response.status).json(response)
   } catch (err) {
@@ -75,11 +73,9 @@ router.get('/get', validate, async (req, res) => {
     const { user_id } = req.user.subject
 
     if (!value_id && !user_id) {
-      return res
-        .status(404)
-        .json({
-          message: 'No value id or user id was specified in the query string'
-        })
+      return res.status(404).json({
+        message: 'No value id or user id was specified in the query string'
+      })
     }
 
     const result = await service.fetchAllUserProjectsByValue(user_id, value_id)

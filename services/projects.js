@@ -100,30 +100,36 @@ exports.fetchSingleProject = async (userId, id) => {
   }
 }
 
-exports.updateProjectName = async (project, id) => {
-  const userCheck = await getById(project.user_id)
+exports.updateProject = async (project) => {
+  const checkForUser = await getById(project.userId)
 
-  if (!userCheck) {
+  if (!checkForUser) {
     return {
       status: 404,
       message: 'user does not exist'
     }
   }
 
-  const idCheck = await projectData.findUsersByProjects(id)
-  if (!idCheck) {
+  const checkForProject = await projectData.findUsersByProjects(project.id)
+  if (!checkForProject) {
     return {
       status: 404,
       message: 'project does not exist'
     }
   }
 
-  const response = await projectData.editUserProject(project, id)
-  return {
-    status: 200,
-    message: 'Successful',
-    data: {
-      project: response
+  const response = await projectData.editUserProject(project)
+  if (!response) {
+    return {
+      status: 200,
+      isSuccessful: false,
+      message: 'Unable to update project'
+    }
+  } else {
+    return {
+      status: 200,
+      isSuccessful: true,
+      data: response
     }
   }
 }
