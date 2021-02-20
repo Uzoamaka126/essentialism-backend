@@ -3,9 +3,9 @@ const db = require("../db-config");
 module.exports = {
   getUserProjects,
   getUserSingleProject,
-  editUserProject,
+  editProject,
   addUserProjects,
-  deleteUserProjects,
+  deleteProject,
   findUsersByProjects,
   getUserProjectsByValue,
   getAllProjects,
@@ -140,7 +140,7 @@ async function getUserSingleProject(payload) {
 }
 
 // @TODO: Edit a project by user id and project id
-async function editUserProject(project) {
+async function editProject(project) {
   try {
     const ids = await db("projects as p")
       .join("users as u", "u.id", "p.userId")
@@ -158,6 +158,6 @@ async function editUserProject(project) {
 }
 
 // @TODO: Delete a project based on the project id
-function deleteUserProjects(id) {
+function deleteProject(id) {
   return db("projects").where({ id: id }).del();
 }

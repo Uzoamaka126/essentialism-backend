@@ -40,6 +40,7 @@ exports.fetchAllUserProjects = async (userId) => {
     }
     return {
       status: 200,
+      total: response.length,
       isSuccessful: true,
       data: {
         projects: response
@@ -118,7 +119,7 @@ exports.updateProject = async (project) => {
     }
   }
 
-  const response = await projectData.editUserProject(project)
+  const response = await projectData.editProject(project)
   if (!response) {
     return {
       status: 200,
@@ -175,7 +176,7 @@ exports.createUserProject = async (project) => {
   }
 }
 
-exports.removeUserProjects = async (id) => {
+exports.removeProject = async (id) => {
   if (!id) {
     return {
       status: 404,
@@ -190,10 +191,17 @@ exports.removeUserProjects = async (id) => {
       message: 'Project id does not exist'
     }
   }
-  const response = await projectData.deleteUserProjects(id)
+  const response = await projectData.deleteProject(id)
+  if (!response) {
+    return {
+      status: 200,
+      isSuccessful: false,
+      message: "Unable to delete project",
+    };
+  }
   return {
     status: 200,
-    type: 'success',
-    message: 'Deleted Successfully'
-  }
+    isSuccessful: true,
+    message: "Operation Successful",
+  };
 }

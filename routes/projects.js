@@ -89,14 +89,11 @@ router.get("/get", validate, async (req, res) => {
 });
 
 // @TODO: Delete a specified project by id
-router.delete("/delete/:id", validate, async (req, res, next) => {
-  const { id } = req.params;
-  if (!id) {
-    return res.status(404).json({ message: "Id not provided" });
-  }
+router.delete("/delete", validate, async (req, res, next) => {
+  const { id } = req.body;
 
   try {
-    const response = await service.removeUserProjects(id);
+    const response = await service.removeProject(id);
     return res.status(response.status).json(response);
   } catch (error) {
     console.log(error);
