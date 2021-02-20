@@ -37,8 +37,8 @@ async function addNewTask(task) {
       .join("users as u", "u.id", "t.userId")
       .join("projects as p", "p.id", "t.projectId")
       .where({
-        'u.id': task.userId,
-        'p.id': task.projectId,
+        "u.id": task.userId,
+        "p.id": task.projectId,
       });
     const id = ids[0];
     const response = await findTaskById(id);
@@ -74,32 +74,35 @@ async function getTasksByProjectId(task) {
   }
 }
 
-function deleteTask(id) {
-  return db("tasks_table").where({ id: id }).del();
-}
-
+// @TODO: Edit a task by task id
 async function editTask(task) {
   try {
-    const response = await db("tasks_table as t")
-      .join("projects as p", "p.id", "t.project_id")
+    const response = await db("tasks as t")
+      .join("users as u", "u.id", "t.userId")
+      .join("projects as p", "p.id", "t.projectId")
       .select(
-        "p.user_id",
         "t.id",
-        "p.project_name",
-        "task_name",
-        "t.project_id",
-        "createdAt",
-        "updatedAt"
+        "t.userId",
+        "t.projectId",
+        "p.title",
+        "p.valueId",
+        "t.name",
+        "t.createdAt",
+        "t.updatedAt"
       )
+      .update({ name: task.name })
       .where({
-        "t.userId": task.userId,
-        "t.project_id": task.project_id,
         "t.id": task.id,
-      })
-      .update("task_name", task.task_name);
+        "t.projectId": task.projectId,
+        "t.userId": task.userId,
+      });
     return response;
   } catch (err) {
     console.log(err);
     return err;
   }
+}
+
+function deleteTask(id) {
+  return db("tasks").where({ id: id }).del();
 }
