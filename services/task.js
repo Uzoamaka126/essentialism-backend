@@ -1,6 +1,6 @@
 const { v4: uuidv4 } = require("uuid");
-const { findUsersByProjects } = require("../models/projects");
-const { addNewTask } = require("../models/tasks");
+const { findProjectById } = require("../models/projects");
+const { addNewTask, getTasksByProjectId } = require("../models/tasks");
 const { getById } = require("../models/auth");
 
 exports.updateTask = async (task) => {
@@ -59,7 +59,7 @@ exports.createTask = async (task) => {
       };
     }
 
-    const checkForProject = await findUsersByProjects(task.projectId);
+    const checkForProject = await findProjectById(task.projectId);
     if (!checkForProject) {
       return {
         status: 404,
@@ -94,23 +94,55 @@ exports.createTask = async (task) => {
   }
 };
 
-exports.fetchAllUserTasks = async (userId, project_id) => {
-  if (!userId && !project_id) {
+exports.fetchAllTasks = async (task) => {
+  if (!task.userId || !task.projectId) {
     return {
       status: 404,
+      isSuccessful: false,
       message: "user or project id is missing",
     };
   }
 
-  const response = await taskData.getTasksByProjectId(userId, project_id);
-  return {
-    status: 200,
-    type: "success",
-    message: "Successful",
-    data: {
-      tasks: response,
-    },
-  };
+  try {
+    const checkForUser = await getById(task.userId);
+    if (!checkForUser) {
+      return {
+        status: 404,
+        isSuccessful: false,
+        message: "User does not exist",
+      };
+    }
+
+    const checkForProject = await findProjectById(task.projectId);
+    if (!checkForProject) {
+      return {
+        status: 404,
+        isSuccessful: false,
+        message: "Project does not exist",
+      };
+    }
+
+    const response = await getTasksByProjectId(task);
+    if (!response) {
+      return {
+        status: 200,
+        isSuccessful: false,
+        message: "Operation unsuccessful",
+      };
+    }
+    return {
+      status: 200,
+      isSuccessful: false,
+      message: "Operation successful",
+      data: response,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      status: error.response.status === 500 ? 500 : 400,
+      isSuccessful: false,
+    };
+  }
 };
 
 exports.removeUserTasks = async (id) => {

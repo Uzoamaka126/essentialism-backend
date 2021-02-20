@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const {
   createTask,
-  fetchAllUserTasks,
+  fetchAllTasks,
   updateTask,
   removeUserTasks,
 } = require("../services/task");
@@ -20,12 +20,9 @@ router.post("/create", validate, async (req, res, next) => {
 });
 
 // fetch tasks based on projects
-router.get("/:id", validate, async (req, res, next) => {
+router.post("/fetchTasks", validate, async (req, res, next) => {
   try {
-    const user_id = req.user.subject;
-    const project_id = req.params.id
-
-    const result = await fetchAllUserTasks(user_id, project_id);
+    const result = await fetchAllTasks(req.body);
     res.status(result.status).json(result);
   } catch (error) {
     console.log(error);

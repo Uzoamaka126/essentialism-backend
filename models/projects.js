@@ -6,13 +6,13 @@ module.exports = {
   editProject,
   addUserProjects,
   deleteProject,
-  findUsersByProjects,
+  findProjectById,
   getUserProjectsByValue,
   getAllProjects,
 };
 
 // @TODO: Get a project by the project id
-async function findUsersByProjects(id) {
+async function findProjectById(id) {
   try {
     const response = await db("projects as p")
       .join("users as u", "u.id", "p.userId")
@@ -45,7 +45,7 @@ async function addUserProjects(project) {
       .join("values as v", "v.id", "p.valueId")
       .where({ "u.id": project.userId, "v.id": project.valueId });
     const id = ids[0];
-    const response = await findUsersByProjects(id);
+    const response = await findProjectById(id);
     return response;
   } catch (error) {
     console.log(error);

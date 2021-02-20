@@ -5,10 +5,11 @@ module.exports = {
   addNewTask,
   deleteTask,
   editTask,
+  findTaskById,
 };
 
 // @TODO: Find a task by its id from the list of tasks
-async function findTasksById(id) {
+async function findTaskById(id) {
   try {
     const response = await db("tasks as t")
       .select(
@@ -40,7 +41,7 @@ async function addNewTask(task) {
         'p.id': task.projectId,
       });
     const id = ids[0];
-    const response = await findTasksById(id);
+    const response = await findTaskById(id);
     return response;
   } catch (error) {
     console.log(error);
@@ -48,24 +49,24 @@ async function addNewTask(task) {
 }
 
 // @TODO: Get all tasks by project and user id
-async function getTasksByProjectId(userId, project_id) {
+async function getTasksByProjectId(task) {
   try {
-    const tasks = await db("tasks_table as t")
-      .join("users as u", "t.userId", "u.id")
-      .join("projects as p", "p.id", "t.project_id")
+    const tasks = await db("tasks as t")
+      .join("users as u", "u.id", "t.userId")
+      .join("projects as p", "p.id", "t.projectId")
       .select(
         "t.id",
         "t.userId",
-        "t.project_id",
-        "p.project_name",
-        "p.value_id",
-        "t.task_name",
+        "t.projectId",
+        "p.title",
+        "p.valueId",
+        "t.name",
         "t.createdAt",
         "t.updatedAt"
       )
       .where({
-        "t.project_id": project_id,
-        "t.userId": userId,
+        "t.projectId": task.projectId,
+        "t.userId": task.userId,
       });
     return tasks;
   } catch (error) {
