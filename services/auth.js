@@ -60,7 +60,7 @@ exports.loginUser = async (userData) => {
     const user = await getBy({ email });
     if (!user || typeof user === "undefined") {
       return {
-        status: 404,
+        status: 200,
         isSuccessful: false,
         message: "User does not exist",
       };
