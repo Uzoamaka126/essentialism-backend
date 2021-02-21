@@ -62,7 +62,7 @@ exports.loginUser = async (userData) => {
   const { email, password } = userData;
   if (!email) {
     return {
-      status: 401,
+      status: 200,
       isSuccessful: false,
       message: "Email is required.",
     };
@@ -70,7 +70,7 @@ exports.loginUser = async (userData) => {
 
   if (!password) {
     return {
-      status: 401,
+      status: 200,
       isSuccessful: false,
       message: "Password is required.",
     };
@@ -79,7 +79,7 @@ exports.loginUser = async (userData) => {
     const user = await getBy({ email });
     if (!user) {
       return {
-        status: 401,
+        status: 200,
         isSuccessful: false,
         message: "User does not exist",
       };
@@ -88,7 +88,7 @@ exports.loginUser = async (userData) => {
     const passwordCheck = await comparePasswords(password, user.password);
     if (!passwordCheck) {
       return {
-        status: 401,
+        status: 200,
         isSuccessful: false,
         message: "Incorrect password",
       };
