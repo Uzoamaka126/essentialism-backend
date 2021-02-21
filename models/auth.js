@@ -36,7 +36,7 @@ function getByUserId(id) {
 
 function getBy(filter) {
   return db("users")
-    .select("username", "email", "userId", "password")
+    .select("username", "email", "userId", "password", "id")
     .where(filter)
     .first();
 }

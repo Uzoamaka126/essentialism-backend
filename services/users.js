@@ -1,3 +1,4 @@
+const { getById } = require("../models/auth");
 const usersData = require("../models/users");
 
 exports.fetchUsers = async () => {
@@ -6,15 +7,24 @@ exports.fetchUsers = async () => {
 };
 
 exports.fetchSingleUser = async (id) => {
-  const user = await usersData.findUserById(id);
+  const user = await getById(id);
   if (!user) {
-    return { statusCode: 404, data: { message: "User does not exist" } };
+    return {
+      status: 200,
+      isSuccessful: false,
+      message: "User does not exist",
+    };
   }
-  return { statusCode: 200, data: user };
+  return {
+    status: 200,
+    isSuccessful: true,
+    message: "Operation successful",
+    data: user,
+  };
 };
 
 exports.editUserInfo = async (data) => {
-  const { id } = data
+  const { id } = data;
   try {
     const checkForUser = await usersData.findUserById(id);
     if (!checkForUser) {
@@ -24,9 +34,9 @@ exports.editUserInfo = async (data) => {
     return {
       statusCode: 200,
       data: {
-        user
+        user,
       },
-    }
+    };
   } catch (error) {
     console.log(error);
     return error.message;
