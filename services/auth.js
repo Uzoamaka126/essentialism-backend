@@ -11,6 +11,10 @@ const {
   generateVerificationToken,
 } = require("../helpers/tokenGenerator");
 
+async function comparePasswords(plainTextPassword, hash) {
+  return await bcrypt.compare(plainTextPassword, hash);
+}
+
 exports.registerUser = async (user) => {
   try {
     const { password, email } = user;
@@ -56,18 +60,35 @@ exports.registerUser = async (user) => {
 
 exports.loginUser = async (userData) => {
   const { email, password } = userData;
+  if (!email) {
+    return {
+      status: 401,
+      isSuccessful: false,
+      message: "Email is required.",
+    };
+  }
+
+  if (!password) {
+    return {
+      status: 401,
+      isSuccessful: false,
+      message: "Password is required.",
+    };
+  }
   try {
     const user = await getBy({ email });
-    if (!user || typeof user === "undefined") {
+    if (!user) {
       return {
-        status: 200,
+        status: 401,
         isSuccessful: false,
         message: "User does not exist",
       };
     }
-    if (!bcrypt.compareSync(password, user.password)) {
+
+    const passwordCheck = await comparePasswords(password, user.password);
+    if (!passwordCheck) {
       return {
-        status: 200,
+        status: 401,
         isSuccessful: false,
         message: "Incorrect password",
       };

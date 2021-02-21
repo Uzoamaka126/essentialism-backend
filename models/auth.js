@@ -36,14 +36,13 @@ function getByUserId(id) {
 
 function getBy(filter) {
   return db("users")
-    .select("username", "email", "userId")
+    .select("username", "email", "userId", "password")
     .where(filter)
     .first();
 }
 
 function deleteAllUsers(email) {
   return db("users")
-    // .select("id", "email", "password", "jwt", "isVerified", "username")
     .where({ email: email })
     .del();  
 }

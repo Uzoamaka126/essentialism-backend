@@ -19,22 +19,22 @@ router.post('/register', validateSignupData, userExists, async (req, res) => {
     const user = req.body // {username}
     if (!user.email || !EmailValidator.validate(user.email)) {
       return res
-        .status(400)
+        .status(200)
         .send({ auth: false, message: 'Email is required' })
     }
     if (!user.password) {
       return res
-        .status(400)
+        .status(200)
         .send({ auth: false, message: 'Password is required' })
     }
     if (!user.username) {
       return res
-        .status(400)
+        .status(200)
         .send({ auth: false, message: variables.missingUsername })
     }
 
     const response = await registerUser(user)
-    return res.status(201).json(response)
+    return res.status(response.status).json(response)
   } catch (error) {
     res.status(500).json({
       error: error.message
@@ -44,26 +44,12 @@ router.post('/register', validateSignupData, userExists, async (req, res) => {
 
 router.post('/login', validateLoginData, async (req, res) => {
   try {
-    const user = req.body
-    // check if email is valid or provided
-    if (!user.email || !user.password) {
-      return res.status(400).send({
-        auth: false,
-        message: 'Email or password is required'
-      })
-    }
-    const response = await loginUser(user)
-    // if (!response) {
-    //   return res.status(400).send({
-    //     auth: false,
-    //     message: "Email or password is wrong",
-    //   });
-    // }
+    const response = await loginUser(req.body)
     res.status(response.status).json(response)
   } catch (error) {
-    // res.status(500).json({
-    //   error: error.message,
-    // });
+    res.status(500).json({
+      error: error.message,
+    });
     console.log(error)
   }
 })
