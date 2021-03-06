@@ -7,6 +7,13 @@ exports.fetchUsers = async () => {
 };
 
 exports.fetchSingleUser = async (id) => {
+  if (!id) {
+    return {
+      status: 404,
+      isSuccessful: false,
+      message: "Id is required",
+    };
+  }
   const user = await getById(id);
   if (!user) {
     return {
