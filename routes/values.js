@@ -5,8 +5,8 @@ const { validate } = require("../helpers/protectedMiddleware");
 
 router.get("/", validate, async (req, res, next) => {
   try {
-    const values = await service.getValues();
-    res.status(values.statusCode).json(values.data);
+    const response = await service.getValues();
+    res.status(response.status).json(response);
   } catch (error) {
     next(error);
   }

@@ -4,17 +4,16 @@ const usersData = require("../models/users");
 
 async function getValues() {
   const allValues = await valuesData.findValues();
-
   if (!allValues) {
     return {
-      statusCode: 404,
-      data: {
-        message: "Values not found",
-      },
+      status: 200,
+      isSuccessful: false,
+      message: "Values not found",
     };
   }
   return {
-    statusCode: 200,
+    status: 200,
+    isSuccessful: true,
     data: allValues,
   };
 }
@@ -63,7 +62,7 @@ async function fetchTopThreeValues(userId) {
   return {
     status: 200,
     data: {
-      response
+      response,
     },
   };
 }
@@ -84,7 +83,7 @@ async function createUserTopThreeValues(data) {
     };
   }
 
-  const checkForValueId = await valuesData.findValueById(valueId)
+  const checkForValueId = await valuesData.findValueById(valueId);
   if (!checkForValueId) {
     return {
       status: 404,
@@ -95,7 +94,7 @@ async function createUserTopThreeValues(data) {
   const response = await usersData.addUserValues({
     userId,
     valueId,
-    topValuesId
+    topValuesId,
   });
 
   if (!response) {
