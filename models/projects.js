@@ -107,7 +107,7 @@ async function getUserProjects(userId) {
         "createdAt",
         "updatedAt"
       )
-      .where({ "u.id": userId });
+      .where({ "p.userId": userId });
     return projects;
   } catch (error) {
     console.log(error);
